@@ -1,0 +1,275 @@
+name: Deploy servers to AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploymentEnv:
+        description: 'Deployment environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+        - dev
+        - staging
+        - prod
+      packageName:
+        description: 'Server package name'
+        required: true
+        default: 'api'
+        type: choice
+        options:
+        - api
+        - real-time-collector
+        - frontend
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/**"
+
+jobs:
+  changes:
+    name: Find Changes and/or Set Vars for Deployment
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.set-vars.outputs.packages }}
+      frontendPackages: ${{ steps.set-vars.outputs.frontendPackages }}
+      deploymentEnv: ${{ steps.set-vars.outputs.deploymentEnv }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Finds changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        with:
+          filters: |
+            api:
+              - 'packages/api/**'
+              - 'packages/postgresql/**'
+            real-time-collector:
+              - 'packages/real-time-collector/**'
+              - 'packages/postgresql/**'
+            frontend:
+              - 'packages/frontend/**'
+      - name: Restore lerna
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # Yarn is already installed
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # cache: "yarn"
+          node-version-file: ".nvmrc"
+          cache-dependency-path: yarn.lock
+      - name: Install packages
+        run: yarn install
+      - name: Build scripts package
+        working-directory: packages/scripts
+        run: yarn build
+
+      # Setting up exported variables
+      # -------------------------------------------------------
+      - name: Set deploymentEnv variable
+        id: cond-val-deploymentEnv
+        uses: haya14busa/action-cond@v1.1.0
+        with:
+          cond: ${{ steps.filter.conclusion == 'skipped' }}
+          if_true: "${{ inputs.deploymentEnv }}"
+          if_false: "dev"
+
+      - name: Set packages variable
+        id: cond-val-packages
+        uses: haya14busa/action-cond@v1.1.0
+        with:
+          cond: ${{ steps.filter.conclusion == 'skipped' }}
+          if_true: '["${{ inputs.packageName }}"]'
+          if_false: "${{ steps.filter.outputs.changes }}"
+
+      - name: Set variables to export
+        id: set-vars
+        env:
+          isManual: "${{ steps.filter.conclusion == 'skipped' }}"
+          deploymentEnv: "${{ steps.cond-val-deploymentEnv.outputs.value }}"
+          packages: "${{ steps.cond-val-packages.outputs.value }}"
+        run: yarn run script pre-deploy
+
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    needs: [changes]
+    if: ${{ needs.changes.outputs.frontendPackages != '[]' }}
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.frontendPackages) }}
+        deploymentEnv: ${{ fromJSON(needs.changes.outputs.deploymentEnv) }}
+
+    env:
+      isManual: ${{ github.event_name == 'workflow_dispatch' }}
+      deploymentEnv: "${{ matrix.deploymentEnv }}"
+      packages: "${{ needs.changes.outputs.frontendPackages }}"
+      package: ${{ matrix.package }}
+      COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Restore lerna
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # cache: "yarn"
+          node-version-file: ".nvmrc"
+          cache-dependency-path: yarn.lock
+      - name: Install packages
+        run: yarn install
+      - name: Build scripts package
+        working-directory: packages/scripts
+        run: yarn run build
+
+      - name: Configure AWS credentials
+        # Visit https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+        # to learn how to set this up
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::968542545167:role/smg-frontend-deploy
+          aws-region: us-east-1
+
+      - name: Delete .env files
+        run: find packages -name "*.env*" -type f -delete
+
+      - name: Run pre-deploy script
+        id: config
+        run: yarn run script pre-deploy-frontend
+
+      - name: Build frontend
+        working-directory: packages/${{ matrix.package }}
+        env:
+          VITE_APP_URL: ${{ steps.config.outputs.VITE_APP_URL }}
+          VITE_BASE_API_URL: ${{ steps.config.outputs.VITE_BASE_API_URL }}
+        run: yarn run build
+
+      # https://gist.github.com/bradwestfall/b5b0e450015dbc9b4e56e5f398df48ff
+      - name: Deploy frontend
+        working-directory: packages/${{ matrix.package }}
+        run: |
+          aws s3 sync dist/ s3://smg-${{ matrix.deploymentEnv }}-0
+          aws cloudfront create-invalidation --distribution-id E1P6OR6VCO09V7 --paths '/*'
+
+  deploy-server:
+    name: Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    needs: [changes]
+    if: ${{ needs.changes.outputs.packages != '[]' }}
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+        deploymentEnv: ${{ fromJSON(needs.changes.outputs.deploymentEnv) }}
+
+    env:
+      isManual: ${{ github.event_name == 'workflow_dispatch' }}
+      deploymentEnv: "${{ matrix.deploymentEnv }}"
+      packages: "${{ needs.changes.outputs.packages }}"
+      package: ${{ matrix.package }}
+      ecsService: smg-${{ matrix.package }}-${{ matrix.deploymentEnv }}-service
+      ecsCluster: smg-${{ matrix.package }}-${{ matrix.deploymentEnv }}
+      COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Restore lerna
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # cache: "yarn"
+          node-version-file: ".nvmrc"
+          cache-dependency-path: yarn.lock
+      - name: Install packages
+        run: yarn install
+      - name: Build scripts package
+        working-directory: packages/scripts
+        run: yarn run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::968542545167:role/smg-server-deploy-${{ matrix.deploymentEnv }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Preparing build
+      # -------------------------------------------------------
+
+      - name: Set final location
+        id: pk-loc
+        run: |
+          echo '::set-output name=name::${{ matrix.package }}'
+
+      # Build package
+      # -------------------------------------------------------
+      - name: Delete .env files
+        run: find packages -name "*.env*" -type f -delete
+
+      - name: Build, tag, and push package image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: smg-${{ matrix.package }}-${{ matrix.deploymentEnv }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f packages/${{ steps.pk-loc.outputs.name }}/Dockerfile .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Fill in the new image ID in Amazon ECS task definition
+        id: fill-app-image
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: 'packages/${{ steps.pk-loc.outputs.name }}/deploy/aws-task-definition-${{ matrix.package }}-${{ matrix.deploymentEnv }}.json'
+          container-name: app
+          image: ${{ steps.build-image.outputs.image }}
+
+      # Deploy
+      # -------------------------------------------------------
+      - name: Copy appspec.yml to root directory
+        run: |
+          cp "packages/${{ steps.pk-loc.outputs.name }}/deploy/appspec-${{ matrix.package }}-${{ matrix.deploymentEnv }}.yaml" appspec.yaml
+
+      - name: Run deploy script
+        run: yarn run script deploy
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.fill-app-image.outputs.task-definition }}
+          service: smg-${{ matrix.package }}-${{ matrix.deploymentEnv }}-service
+          cluster: smg-${{ matrix.package }}-${{ matrix.deploymentEnv }}
+          wait-for-service-stability: false
+          force-new-deployment: true
+
+      - name: Run post-deploy script
+        run: yarn run script post-deploy

@@ -1,0 +1,125 @@
+#
+# Lints and builds all packages
+#
+
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - "packages/**"
+
+env:
+  # For those who're color-blind, we force disable color
+  FORCE_COLOR: false
+
+jobs:
+  test-custom:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        # Visit https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+        # to learn how to set this up
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::968542545167:role/smg-ci
+          aws-region: us-east-1
+      - name: Restore lerna
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # cache: "yarn"
+          node-version-file: ".nvmrc"
+          cache-dependency-path: yarn.lock
+      - name: Install packages
+        run: |
+          yarn install
+      - name: Build script package
+        working-directory: packages/scripts
+        run: |
+          yarn run build
+      - name: Run CI
+        run: |
+          yarn run script ci-test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore lerna
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # cache: "yarn"
+          node-version-file: ".nvmrc"
+          cache-dependency-path: yarn.lock
+      - name: Install packages
+        run: |
+          yarn global add lerna
+          lerna bootstrap
+      - name: Build packages
+        run: |
+          lerna run build
+      - name: Lint
+        run: |
+          lerna run lint:check --parallel
+          lerna run format:check --parallel
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+    env:
+      PG_USERNAME: postgres
+      PG_PASSWORD: postgres
+      PG_DATABASE: postgres
+      PG_HOST: localhost
+      PG_PORT: 5432
+      REDIS_URI: "redis://localhost:6379/0"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore lerna
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          # cache: "yarn"
+          node-version-file: ".nvmrc"
+          cache-dependency-path: yarn.lock
+      - name: Install packages
+        run: |
+          yarn global add lerna
+          lerna bootstrap
+      - name: Build packages
+        run: lerna run build
+      - name: "Migrate packages/* database"
+        working-directory: packages/postgresql
+        run: |
+          yarn run migration:run
+      - name: Run tests
+        run: |
+          lerna run test

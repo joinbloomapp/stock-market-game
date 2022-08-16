@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#
+# Copyright (c) 2022 Contour Labs, Inc.
+# SPDX-License-Identifier: APGL-3.0-only
+#
+
+# Restarts a local postgres instance
+
+psql postgres << EOF
+DROP DATABASE stockmarketgame;
+CREATE DATABASE stockmarketgame;
+CREATE ROLE "ULOORL5TSX57ZFDRCDXKCZZ5P6NE7PD5" WITH LOGIN SUPERUSER CREATEDB ENCRYPTED PASSWORD 'NFEGHIK4HEQBWRCFHRHJZQINO3KMJR7Q7HTX7YCVTS3V2MTOUL';
+GRANT ALL PRIVILEGES ON DATABASE stockmarketgame TO "ULOORL5TSX57ZFDRCDXKCZZ5P6NE7PD5";
+EOF
+yarn migration:run

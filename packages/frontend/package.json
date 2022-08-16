@@ -1,0 +1,50 @@
+{
+  "name": "@bloom-smg/frontend",
+  "private": true,
+  "version": "0.0.1",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ./src --ext ts,tsx --fix",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.6.6",
+    "@vitejs/plugin-react": "^1.3.0",
+    "@vkontakte/icons": "^1.176.0",
+    "classnames": "^2.3.1",
+    "dayjs": "^1.11.3",
+    "lodash": "^4.17.21",
+    "react": "^18.0.0",
+    "react-datetime-picker": "^3.5.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.3.0",
+    "react-tooltip": "^4.2.21",
+    "recharts": "^2.1.12",
+    "tailwind-merge": "^1.5.1",
+    "vite": "^2.9.9",
+    "zustand": "^4.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/react": "^18.0.0",
+    "@types/react-datetime-picker": "^3.4.1",
+    "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.7",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.28.0",
+    "husky": ">=7",
+    "lint-staged": ">=10",
+    "postcss": "^8.4.14",
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.1.5",
+    "typescript": "^4.6.3"
+  }
+}

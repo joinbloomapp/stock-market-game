@@ -1,0 +1,4 @@
+@joinbloomapp/smg
+
+scripts/* @joinbloomapp/devops
+.github/workflows/* @joinbloomapp/devops

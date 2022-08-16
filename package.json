@@ -1,0 +1,23 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "script": "node packages/scripts/dist/index.js",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
+  },
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "lerna": "^3.22.1",
+    "lint-staged": "^13.0.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "resolutions": {
+    "@types/eslint": "8.4.3"
+  },
+  "overrides": {
+    "@types/eslint": "8.4.3"
+  }
+}

@@ -1,0 +1,133 @@
+/*
+ * Copyright (c) 2022 Contour Labs, Inc.
+ * SPDX-License-Identifier: APGL-3.0-only
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'SF Pro Rounded';
+  font-weight: 400;
+  src: url('./assets/fonts/SF-Pro-Rounded-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SF Pro Rounded';
+  font-weight: 500;
+  src: url('./assets/fonts/SF-Pro-Rounded-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SF Pro Rounded';
+  font-weight: 600;
+  src: url('./assets/fonts/SF-Pro-Rounded-Semibold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SF Pro Rounded';
+  font-weight: 700;
+  src: url('./assets/fonts/SF-Pro-Rounded-Bold.ttf') format('truetype');
+}
+
+html,
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  box-sizing: 'border-box';
+  @apply bg-b-1;
+}
+
+.pink-shadow {
+  box-shadow: 0px 6px 0px #942057;
+}
+
+.pink-shadow-small {
+  box-shadow: 0px 2px 0px #942057;
+}
+
+.pink-shadow:enabled:active {
+  transform: translateY(2px);
+  box-shadow: 0px 4px 0px #942057;
+}
+
+.purple-shadow {
+  box-shadow: 0px 6px 0px #12111b;
+}
+
+.purple-shadow:enabled:active {
+  transform: translateY(2px);
+  box-shadow: 0px 4px 0px #12111b;
+}
+
+.light-pink-gradient {
+  background: linear-gradient(180deg, rgba(23, 22, 33, 0) 0%, rgba(255, 38, 147, 0.2) 100%);
+}
+
+.icon-button:active {
+  background-color: white;
+}
+
+.icon-button {
+  background-color: rgba(255, 79, 131, 0.06);
+}
+
+.icon-button:active {
+  background-color: rgba(255, 79, 131, 0.15);
+}
+
+.nav-box-shadow {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.absolute-vertical-center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+h1 {
+  @apply text-6xl;
+}
+
+h2 {
+  @apply text-5xl;
+}
+
+h3 {
+  @apply text-4xl;
+}
+
+h4 {
+  @apply text-3xl;
+}
+
+h5 {
+  @apply text-2xl;
+}
+
+h6 {
+  @apply text-xl;
+}
+
+p {
+  @apply text-lg;
+}
+
+hr {
+  @apply border-line-1;
+  height: 0.5;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}

@@ -1,0 +1,102 @@
+{
+  "name": "@bloom-smg/real-time-collector",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "AGPL-3.0",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint": "yarn lint:check --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@bloom-smg/postgresql": "^0.0.1",
+    "@logtail/node": "^0.1.10",
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/config": "^2.0.0",
+    "@nestjs/core": "^8.0.0",
+    "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/typeorm": "^8.0.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "dotenv": "16.0.0",
+    "dotenv-expand": "8.0.2",
+    "pg": "^8.7.3",
+    "pg-query-stream": "^4.2.3",
+    "qs": "^6.10.3",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^7.2.0",
+    "typeorm": "^0.2.45",
+    "ws": "^8.8.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^8.0.0",
+    "@nestjs/schematics": "^8.0.0",
+    "@nestjs/testing": "^8.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jest": "27.4.1",
+    "@types/node": "^17.0.0",
+    "@types/supertest": "^2.0.11",
+    "@types/ws": "^8.5.3",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^27.2.5",
+    "prettier": "2.6.2",
+    "source-map-support": "^0.5.20",
+    "supertest": "^6.1.3",
+    "ts-jest": "^27.0.3",
+    "ts-loader": "^9.2.3",
+    "ts-node": "^10.0.0",
+    "tsconfig-paths": "^3.10.1",
+    "typeorm-transactional-tests": "^1.1.5",
+    "typescript": "^4.3.5"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".test.ts$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/",
+      ".testconfig.ts"
+    ],
+    "moduleNameMapper": {
+      "^src/(.*)": "<rootDir>/../src/$1"
+    },
+    "globalSetup": "<rootDir>/testing/global.testconfig.ts",
+    "setupFiles": [
+      "dotenv/config"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/testing/setup.testconfig.ts"
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}

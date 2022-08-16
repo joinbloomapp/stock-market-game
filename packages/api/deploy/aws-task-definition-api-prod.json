@@ -1,0 +1,147 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "filled-in-by-gh-action",
+      "environment": [
+        {
+          "name": "IS_API",
+          "value": "1"
+        },
+        {
+          "name": "TZ",
+          "value": "UTC"
+        },
+        {
+          "name": "IS_AWS",
+          "value": "1"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "LOG_LEVEL",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/LOG_LEVEL"
+        },
+        {
+          "name": "NODE_ENV",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/NODE_ENV"
+        },
+        {
+          "name": "PASSWORD_SALT",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/PASSWORD_SALT"
+        },
+        {
+          "name": "REGENERATE_TOKEN",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/REGENERATE_TOKEN"
+        },
+        {
+          "name": "REDIS_URI",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/REDIS_URI"
+        },
+        {
+          "name": "PG_USERNAME",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/PG_USERNAME"
+        },
+        {
+          "name": "PG_PASSWORD",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/PG_PASSWORD"
+        },
+        {
+          "name": "PG_HOST",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/PG_HOST"
+        },
+        {
+          "name": "PG_PORT",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/PG_PORT"
+        },
+        {
+          "name": "PG_DATABASE",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/PG_DATABASE"
+        },
+        {
+          "name": "IEX_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/IEX_API_KEY"
+        },
+        {
+          "name": "POLYGON_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/POLYGON_API_KEY"
+        },
+        {
+          "name": "SPONSOR_APCA_API_KEY_BROKER",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/SPONSOR_APCA_API_KEY_BROKER"
+        },
+        {
+          "name": "SPONSOR_APCA_API_SECRET_BROKER",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/SPONSOR_APCA_API_SECRET_BROKER"
+        },
+        {
+          "name": "STOCK_NEWS_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/STOCK_NEWS_API_KEY"
+        },
+        {
+          "name": "YH_FINANCE_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/YH_FINANCE_API_KEY"
+        },
+        {
+          "name": "OAUTH_GOOGLE_CLIENT_ID",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/OAUTH_GOOGLE_CLIENT_ID"
+        },
+        {
+          "name": "OAUTH_GOOGLE_CLIENT_SECRET",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/OAUTH_GOOGLE_CLIENT_SECRET"
+        },
+        {
+          "name": "JWT_PRIVATE_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/JWT_PRIVATE_KEY"
+        },
+        {
+          "name": "JWT_PUBLIC_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/JWT_PUBLIC_KEY"
+        },
+        {
+          "name": "TWILIO_AUTH_TOKEN",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/TWILIO_AUTH_TOKEN"
+        },
+        {
+          "name": "TWILIO_ACCOUNT_SID",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/TWILIO_ACCOUNT_SID"
+        },
+        {
+          "name": "TWILIO_VERIFICATION_SID",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/TWILIO_VERIFICATION_SID"
+        },
+        {
+          "name": "TWILIO_BLOOM_PHONE_NUMBER",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/TWILIO_BLOOM_PHONE_NUMBER"
+        },
+        {
+          "name": "COURIER_AUTH_TOKEN",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/COURIER_AUTH_TOKEN"
+        },
+        {
+          "name": "RESET_PASSWORD_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/RESET_PASSWORD_KEY"
+        },
+        {
+          "name": "FINANCIAL_MODELING_PREP_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-prod/api/FINANCIAL_MODELING_PREP_KEY"
+        }
+      ],
+      "memory": "256",
+      "cpu": "256",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": "80",
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "volumes": [],
+  "networkMode": "bridge",
+  "placementConstraints": [],
+  "family": "smg-api-prod",
+  "taskRoleArn": "arn:aws:iam::968542545167:role/ecsSmgProdInstanceRole",
+  "executionRoleArn": "arn:aws:iam::968542545167:role/ecsSmgProdTaskExecutionRole"
+}

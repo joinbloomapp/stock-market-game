@@ -1,0 +1,5 @@
+*
+!./package.json
+!./packages/api/package.json
+!./packages/postgresql/package.json
+!./packages/api/.env

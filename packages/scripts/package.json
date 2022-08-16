@@ -1,0 +1,32 @@
+{
+  "name": "scripts",
+  "version": "0.0.0",
+  "description": "Helper script files",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "npx tsc",
+    "start:prod": "node dist/index",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "lint:check": "eslint \"src/**/*.ts\"",
+    "lint": "yarn lint:check --fix"
+  },
+  "dependencies": {
+    "@actions/core": "^1.8.2",
+    "@actions/github": "^5.0.3",
+    "aws-sdk": "^2.1138.0",
+    "node-fetch": "^2.6.7",
+    "set-interval-async": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "2.6.2",
+    "typescript": "^4.6.4"
+  }
+}

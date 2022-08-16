@@ -1,0 +1,10 @@
+version: 0.0
+
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "arn::ecs:us-east-1:968542545167:task-definition/smg-api-staging:*"
+        LoadBalancerInfo:
+          ContainerName: "app"
+          ContainerPort: 80

@@ -1,0 +1,71 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "filled-in-by-gh-action",
+      "environment": [
+        {
+          "name": "IS_API",
+          "value": "1"
+        },
+        {
+          "name": "TZ",
+          "value": "UTC"
+        },
+        {
+          "name": "IS_AWS",
+          "value": "1"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "LOG_LEVEL",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/real-time-collector/LOG_LEVEL"
+        },
+        {
+          "name": "NODE_ENV",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/real-time-collector/NODE_ENV"
+        },
+        {
+          "name": "POLYGON_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/real-time-collector/POLYGON_API_KEY"
+        },
+        {
+          "name": "PG_USERNAME",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/api/PG_USERNAME"
+        },
+        {
+          "name": "PG_PASSWORD",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/api/PG_PASSWORD"
+        },
+        {
+          "name": "PG_HOST",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/api/PG_HOST"
+        },
+        {
+          "name": "PG_PORT",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/api/PG_PORT"
+        },
+        {
+          "name": "PG_DATABASE",
+          "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/api/PG_DATABASE"
+        }
+      ],
+      "memory": "1600",
+      "cpu": "1024",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": "80",
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "volumes": [],
+  "networkMode": "bridge",
+  "placementConstraints": [],
+  "family": "smg-real-time-collector-dev",
+  "taskRoleArn": "arn:aws:iam::968542545167:role/ecsSmgDevInstanceRole",
+  "executionRoleArn": "arn:aws:iam::968542545167:role/ecsSmgDevTaskExecutionRole"
+}
