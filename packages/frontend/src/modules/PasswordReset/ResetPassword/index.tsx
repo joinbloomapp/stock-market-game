@@ -5,6 +5,7 @@ import Input, { InputHeight, InputStyle } from '../../../components/Input';
 import AuthService from '../../../services/Auth';
 import Analytics from '../../../system/Analytics';
 import { OnboardingEvents } from '../../../system/Analytics/events/OnboardingEvents';
+import StringUtils from '../../../utils/StringUtils';
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
@@ -33,7 +34,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="bg-b-2 w-[482px] h-min rounded-xl text-center p-12 absolute-vertical-center">
+    <div className="bg-b-2 w-[482px] h-min rounded-xl text-center p-10 absolute-vertical-center">
       <div className="flex flex-col justify-between h-full space-y-10">
         <form onSubmit={onSubmit} className="w-full flex flex-col space-y-4">
           <div className="flex flex-col space-y-4">
@@ -47,9 +48,13 @@ export default function ResetPassword() {
                 inputHeight={InputHeight.Medium}
                 value={newPassword}
                 onChange={(e) => {
-                  setNewPassword(e.target.value);
                   setError('');
                   setSuccess(false);
+                  // Validate the password
+                  if (!StringUtils.isValidPassword(e.target.value)) {
+                    setError('Password too weak');
+                  }
+                  setNewPassword(e.target.value);
                 }}
                 autoFocus
                 placeholder="New password"

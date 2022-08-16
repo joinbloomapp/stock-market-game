@@ -26,6 +26,7 @@ export default function JoinGame() {
 
     if (!inviteCode) {
       setError('Enter invite code');
+      setLoading(false);
       return;
     }
 

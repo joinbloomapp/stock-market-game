@@ -4,8 +4,8 @@
  */
 
 import _ from 'lodash';
-import { useContext, useState } from 'react';
-import { Link, useMatch, useNavigate, useSearchParams } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, useLocation, useMatch, useNavigate, useSearchParams } from 'react-router-dom';
 import { UserContext } from '../../App';
 import Badge from '../../components/Badge';
 import Button, { ButtonType } from '../../components/Button';
@@ -16,6 +16,7 @@ import UserService from '../../services/User';
 import Analytics from '../../system/Analytics';
 import { GameEvents } from '../../system/Analytics/events/GameEvents';
 import { OnboardingEvents } from '../../system/Analytics/events/OnboardingEvents';
+import StringUtils from '../../utils/StringUtils';
 import Header from '../Header';
 
 export default function Onboarding() {
@@ -23,7 +24,6 @@ export default function Onboarding() {
   const isSignup = useMatch('/start');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const { setUser } = useContext(UserContext);
   const initialState = {
@@ -35,9 +35,19 @@ export default function Onboarding() {
   const [{ firstName, lastName, email, password }, setFormValues] = useState(initialState);
   const navigate = useNavigate();
   const inviteCode = searchParams.get('inviteCode');
-  const createGame = searchParams.get('create');
+  const isCreatingGame = !!searchParams.get('create');
+  const isJoiningGame = !!inviteCode;
+  const location = useLocation();
 
-  const joinGame = async () => {
+  useEffect(() => {
+    if (isCreatingGame && isJoiningGame) {
+      // If for some reason, they try to put both query parameters, inviteCode and create in, then we will always prioritize the inviteCode
+      searchParams.delete('create');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, []);
+
+  const joinGame = async (): Promise<boolean> => {
     let ok;
 
     try {
@@ -49,64 +59,45 @@ export default function Onboarding() {
       setError('Could not join game');
     }
 
-    if (ok) {
-      navigate(`/dashboard/g/${inviteCode}/portfolio`, { replace: true });
-    }
+    return !!ok;
   };
 
-  /**
-   * @returns whether user account exists
-   */
-  const login = async (): Promise<boolean | undefined> => {
+  const login = async () => {
     let ok;
-    let code;
-
-    const body = {
-      email,
-      password,
-    };
-
-    const incorrectPassMessage = 'Incorrect password';
 
     try {
-      // Try to login first
-      ok = await AuthService.login(body);
-      code = 200;
+      ok = await AuthService.login({
+        email,
+        password,
+      });
     } catch (error) {
-      // @ts-ignore
-      code = error.response.status;
-      if (code !== 406) {
-        // Only if email does exist in the db, log an error
-        Analytics.track(OnboardingEvents.LOGIN_ERROR, {
-          error:
-            (code === 403 && incorrectPassMessage) ||
-            // @ts-ignore
-            error?.response?.data?.message ||
-            // @ts-ignore
-            error?.message,
-          code,
-        });
-      }
+      Analytics.track(OnboardingEvents.LOGIN_ERROR, {
+        email,
+        error:
+          // @ts-ignore
+          error?.response?.data?.message ||
+          // @ts-ignore
+          error?.message,
+      });
     }
 
     if (ok) {
-      // If user has already signed up and just logged in
-      Analytics.track(OnboardingEvents.LOGIN_SUCCESS, body);
+      Analytics.track(OnboardingEvents.LOGIN_SUCCESS, { email });
       const curUser = await UserService.getUser();
       Analytics.identify(curUser?.id, curUser);
       let redirect = '/dashboard/g';
-      if (createGame) {
+      if (isCreatingGame) {
         redirect = `/game/create`;
       } else if (inviteCode) {
-        await joinGame();
-        setUser(curUser);
-        return;
+        const joinSuccess = await joinGame();
+        if (joinSuccess) {
+          redirect = `/dashboard/g/${inviteCode}/portfolio`;
+        }
       }
       navigate(redirect, { replace: true });
       setUser(curUser);
-    } else if (code === 403) {
-      // Email exists, but incorrect password
-      setError(incorrectPassMessage);
+    } else {
+      setError('Incorrect email or password');
     }
   };
 
@@ -137,13 +128,17 @@ export default function Onboarding() {
       Analytics.track(OnboardingEvents.SIGNUP_SUCCESS, { inviteCode, ..._.omit(body, 'password') });
       const curUser = await UserService.getUser();
       Analytics.identify(curUser.id, curUser);
+      let redirect = '';
       if (!inviteCode) {
         // If the user wants to create a game, then they are pushed to the create game screen
         navigate('/game/create', { replace: true });
         setUser(curUser);
         return;
       }
-      await joinGame();
+      const joinSuccess = await joinGame();
+      if (joinSuccess) {
+        navigate(`/dashboard/g/${inviteCode}/portfolio`, { replace: true });
+      }
       setUser(curUser);
     }
   };
@@ -163,39 +158,63 @@ export default function Onboarding() {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormValues((prevState) => ({ ...prevState, [name]: value }));
     setError('');
-    setSuccess('');
+    if (isSignup && e.target.name === 'password') {
+      // When signing up, validate the password
+      if (!StringUtils.isValidPassword(e.target.value)) {
+        setError('Password too weak');
+      }
+    }
+    setFormValues((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  return (
-    <div className="bg-polka bg-center bg-cover h-screen">
-      <Header />
-      <div className="flex justify-center text-t-1 mt-16 px-2 md:px-16 lg:px-24">
-        <div className="absolute bottom-12 text-center w-[482px] text-t-1">
-          {isSignup ? 'Already have an account? ' : "Don't have an account yet? "}
+  const renderFooterActions = () => {
+    return (
+      <div className="absolute bottom-12 text-center w-[482px] text-t-1 mt-8">
+        <p className="text-md flex space-x-4 justify-center text-t-1">
+          {!isCreatingGame && (
+            <Link
+              to="/game/create"
+              className="underline underline-offset-4"
+              onClick={() =>
+                isSignup
+                  ? Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)
+                  : Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME)
+              }
+            >
+              Create a game
+            </Link>
+          )}
           <Link
-            to={isSignup ? '/login' : '/start'}
-            className="text-t-1 underline underline-offset-4"
+            to="/game/join"
+            className="underline underline-offset-4"
             onClick={() =>
               isSignup
                 ? Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)
                 : Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME)
             }
           >
-            {isSignup ? 'Log in' : 'Sign up'}
+            Join {isJoiningGame ? 'different' : 'a'} game
           </Link>
-          {createGame ? ' to create game' : ''}
-        </div>
-        <div className="bg-b-2 w-[482px] h-min rounded-xl text-center p-12 absolute-vertical-center">
+        </p>
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-polka bg-center bg-cover h-screen">
+      <Header />
+      <div className="flex justify-center text-t-1 mt-16 px-2 md:px-16 lg:px-24">
+        {renderFooterActions()}
+        <div className="bg-b-2 w-[482px] h-min rounded-xl text-center p-10 absolute-vertical-center">
           <div className="flex flex-col justify-between h-full space-y-10">
             <form onSubmit={onSubmit} className="w-full flex flex-col space-y-4">
               <div className="flex flex-col space-y-4">
                 <h1 className="text-2xl font-bold">
-                  {isLogin ? 'Log in' : 'Create an account'}
-                  {inviteCode && ' to join'}
+                  {isLogin ? 'Log in' : 'Sign up'}
+                  {isJoiningGame ? ' to join game' : isCreatingGame ? ' to create a game' : ''}
                 </h1>
-                {inviteCode && <Badge className="w-48">Game {inviteCode}</Badge>}
+                {isJoiningGame && <Badge className="w-48">Game {inviteCode}</Badge>}
                 <div className="flex flex-col space-y-3">
                   <Input
                     name="email"
@@ -258,7 +277,7 @@ export default function Onboarding() {
                     Forgot password?
                   </Button>
                 )}
-                <div className="flex flex-col">
+                <div className="flex flex-col space-y-8">
                   <Button
                     shadow
                     loading={loading}
@@ -276,6 +295,21 @@ export default function Onboarding() {
           <Button shadow type={ButtonType.Secondary} iconImage={GoogleIcon} onClick={handleSubmit}>
             Continue with Google
           </Button> */}
+                  <p className="text-sm text-center">
+                    {isSignup ? 'Already have an account? ' : "Don't have an account yet? "}
+                    <Link
+                      to={{ pathname: isSignup ? '/login' : '/start', search: location.search }}
+                      className="text-t-1 underline underline-offset-4"
+                      onClick={() =>
+                        isSignup
+                          ? Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)
+                          : Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME)
+                      }
+                    >
+                      {isSignup ? 'Log in' : 'Sign up'}
+                    </Link>
+                    {isJoiningGame ? ' to join game' : isCreatingGame ? ' to create a game' : ''}
+                  </p>
                 </div>
               </div>
             </form>
