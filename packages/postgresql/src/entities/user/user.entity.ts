@@ -1,7 +1,7 @@
 import { JSONValue } from "src/utils/types";
 /*
  * Copyright (c) 2022 Contour Labs, Inc.
- * SPDX-License-Identifier: APGL-3.0-only
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import {

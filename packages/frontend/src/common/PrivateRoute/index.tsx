@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 Contour Labs, Inc.
- * SPDX-License-Identifier: APGL-3.0-only
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { useContext } from 'react';
@@ -18,7 +18,13 @@ export default function PrivateRoute({ Component }: IPrivateRouteProps) {
   const createGame = useMatch('/game/create');
 
   if (!user) {
-    return <Navigate to={`/login${createGame ? '?create=true' : ''}`} state={{ from: location }} replace />;
+    return (
+      <Navigate
+        to={`/login${createGame ? '?create=true' : ''}`}
+        state={{ from: location }}
+        replace
+      />
+    );
   }
 
   return <Component />;
