@@ -10,6 +10,7 @@ export enum OnboardingEvents {
   SIGNUP_SUCCESS = 'ONBOARDING:signup_success',
   SIGNUP_ERROR = 'ONBOARDING:signup_error',
   CLICKED_LOGIN = 'ONBOARDING:clicked_login',
+  CLICKED_SIGNUP = 'ONBOARDING:clicked_signup',
   LOGIN_SUCCESS = 'ONBOARDING:login_success',
   LOGIN_ERROR = 'ONBOARDING:login_error',
   CLICKED_LOGOUT = 'ONBOARDING:clicked_logout',

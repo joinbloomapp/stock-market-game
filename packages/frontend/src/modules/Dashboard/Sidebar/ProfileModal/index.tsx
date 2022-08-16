@@ -13,6 +13,7 @@ import Modal, { IModalProps } from '../../../../components/Modal';
 import UserService from '../../../../services/User';
 import Analytics from '../../../../system/Analytics';
 import { ProfileEvents } from '../../../../system/Analytics/events/ProfileEvents';
+import StringUtils from '../../../../utils/StringUtils';
 
 export interface IProfileModalProps extends IModalProps {}
 
@@ -47,9 +48,15 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormValues((prevState) => ({ ...prevState, [name]: value }));
     setError('');
     setSuccess('');
+    if (e.target.name === 'newPassword') {
+      // Validate the new password
+      if (!StringUtils.isValidPassword(e.target.value)) {
+        setError('New password too weak');
+      }
+    }
+    setFormValues((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -214,6 +221,7 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
               type={ButtonType.Primary}
               className="w-full h-14"
               buttonType="submit"
+              disabled={!!(error || loading)}
             >
               {showPasswordReset ? 'Reset password' : 'Save'}
             </Button>

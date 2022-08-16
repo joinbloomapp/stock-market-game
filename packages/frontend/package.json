@@ -24,8 +24,7 @@
     "react-tooltip": "^4.2.21",
     "recharts": "^2.1.12",
     "tailwind-merge": "^1.5.1",
-    "vite": "^2.9.9",
-    "zustand": "^4.0.0-rc.1"
+    "vite": "^2.9.9"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",

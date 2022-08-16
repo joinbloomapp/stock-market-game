@@ -18,7 +18,6 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotAcceptableException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -85,7 +84,7 @@ export class AuthService {
       { select: ["id", "password"] }
     );
     if (!user) {
-      throw new NotAcceptableException("Email does not exist");
+      throw new ForbiddenException("Incorrect email or password");
     }
     let verified: boolean;
     try {
@@ -94,7 +93,7 @@ export class AuthService {
       throw new BadRequestException("Password may be too long");
     }
     if (!verified) {
-      throw new ForbiddenException("Incorrect email and password combination");
+      throw new ForbiddenException("Incorrect email or password");
     }
     return { access: await this.generateAccessToken({ userId: user.id }) };
   }

@@ -26,6 +26,7 @@ export default function JoinGame() {
 
     if (!inviteCode) {
       setError('Enter invite code');
+      setLoading(false);
       return;
     }
 
@@ -44,7 +45,7 @@ export default function JoinGame() {
 
   return (
     <>
-      <div className="absolute bottom-12 text-center w-[482px] text-t-1">
+      <div className="absolute bottom-8 text-center w-[482px] text-t-1">
         <Link
           to="/game/create"
           className="text-t-1 underline underline-offset-2"
