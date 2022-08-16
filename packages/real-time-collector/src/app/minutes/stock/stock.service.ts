@@ -293,34 +293,40 @@ export class StockMinutesService extends AbstractMinutesService {
            WHERE t."playerId" = $1 AND t."stockId" = $3 ORDER BY t."id" DESC LIMIT 1)`,
         [x.playerId, x.gameId, x.stockId]
       );
-      await conn.query(
-        `INSERT INTO "HistoricalAggregatePosition" (
+      const value = (
+        await conn.query(
+          `INSERT INTO "HistoricalAggregatePosition" (
             "createdAt",
             "playerId",
             "gameId",
             "value"
         ) (SELECT NOW(), $1, $2, (t."value"${x.improvement})
            FROM "HistoricalAggregatePosition" as t
-           WHERE t."playerId" = $1 ORDER BY t."id" DESC LIMIT 1)`,
-        [x.playerId, x.gameId]
-      );
+           WHERE t."playerId" = $1 ORDER BY t."id" DESC LIMIT 1)
+        RETURNING "value"`,
+          [x.playerId, x.gameId]
+        )
+      ).value;
       await this.upsertHistoricalAggregatePositionTables(
         conn,
         "HistoricalAggregatePositionMinute",
         x,
-        1000 * 60 * 5
+        1000 * 60 * 5,
+        value
       );
       await this.upsertHistoricalAggregatePositionTables(
         conn,
         "HistoricalAggregatePositionHour",
         x,
-        1000 * 60 * 60
+        1000 * 60 * 60,
+        value
       );
       await this.upsertHistoricalAggregatePositionTables(
         conn,
         "HistoricalAggregatePositionDay",
         x,
-        1000 * 60 * 60 * 24
+        1000 * 60 * 60 * 24,
+        value
       );
     }
   }
@@ -332,7 +338,8 @@ export class StockMinutesService extends AbstractMinutesService {
       | "HistoricalAggregatePositionHour"
       | "HistoricalAggregatePositionMinute",
     x: HistoricalAggBatchT,
-    interval: number
+    interval: number,
+    value: number
   ) {
     const nextInterval = new Date(Math.ceil(Date.now() / interval) * interval);
     const r = await conn.query(
@@ -340,37 +347,11 @@ export class StockMinutesService extends AbstractMinutesService {
       [x.playerId]
     );
     if (r.length && r[0].createdAt.getTime() === nextInterval.getTime()) {
-      if (["0", "+ 0", "-0"].includes(x.improvement)) {
-        return;
-      }
-      let value = parseFloat(r[0].value);
-      if (x.improvement.startsWith("+")) {
-        value += parseFloat(x.improvement.substring(1));
-      } else {
-        value += parseFloat(x.improvement);
-      }
-      value = Math.trunc(value);
-      if (value < 0) {
-        value = 0;
-      }
       await conn.query(`UPDATE "${table}" SET "value" = $1 WHERE "id" = $2`, [
         value,
         r[0].id,
       ]);
     } else {
-      if (["0", "+ 0", "- 0"].includes(x.improvement)) {
-        return;
-      }
-      let value = parseFloat(r[0].value);
-      if (x.improvement.startsWith("+")) {
-        value += parseFloat(x.improvement.substring(1));
-      } else {
-        value += parseFloat(x.improvement);
-      }
-      value = Math.trunc(value);
-      if (value < 0) {
-        value = 0;
-      }
       await conn.query(
         `INSERT INTO "${table}" (
             "playerId",
