@@ -128,16 +128,14 @@ export default function Onboarding() {
       Analytics.track(OnboardingEvents.SIGNUP_SUCCESS, { inviteCode, ..._.omit(body, 'password') });
       const curUser = await UserService.getUser();
       Analytics.identify(curUser.id, curUser);
-      let redirect = '';
       if (!inviteCode) {
         // If the user wants to create a game, then they are pushed to the create game screen
         navigate('/game/create', { replace: true });
-        setUser(curUser);
-        return;
-      }
-      const joinSuccess = await joinGame();
-      if (joinSuccess) {
-        navigate(`/dashboard/g/${inviteCode}/portfolio`, { replace: true });
+      } else {
+        const joinSuccess = await joinGame();
+        if (joinSuccess) {
+          navigate(`/dashboard/g/${inviteCode}/portfolio`, { replace: true });
+        }
       }
       setUser(curUser);
     }
@@ -170,17 +168,13 @@ export default function Onboarding() {
 
   const renderFooterActions = () => {
     return (
-      <div className="absolute bottom-12 text-center w-[482px] text-t-1 mt-8">
+      <div className="absolute bottom-8 text-center w-[482px] text-t-1 mt-8">
         <p className="text-md flex space-x-4 justify-center text-t-1">
           {!isCreatingGame && (
             <Link
               to="/game/create"
               className="underline underline-offset-4"
-              onClick={() =>
-                isSignup
-                  ? Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)
-                  : Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME)
-              }
+              onClick={() => Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)}
             >
               Create a game
             </Link>
@@ -189,9 +183,7 @@ export default function Onboarding() {
             to="/game/join"
             className="underline underline-offset-4"
             onClick={() =>
-              isSignup
-                ? Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)
-                : Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME)
+              Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME, { different: isJoiningGame })
             }
           >
             Join {isJoiningGame ? 'different' : 'a'} game
@@ -302,8 +294,8 @@ export default function Onboarding() {
                       className="text-t-1 underline underline-offset-4"
                       onClick={() =>
                         isSignup
-                          ? Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)
-                          : Analytics.track(OnboardingEvents.CLICKED_JOIN_GAME)
+                          ? Analytics.track(OnboardingEvents.CLICKED_LOGIN)
+                          : Analytics.track(OnboardingEvents.CLICKED_SIGNUP)
                       }
                     >
                       {isSignup ? 'Log in' : 'Sign up'}
