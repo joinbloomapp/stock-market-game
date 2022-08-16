@@ -121,7 +121,7 @@ export default function Onboarding() {
         // @ts-ignore
         error: error?.response?.data?.message || error?.message,
       });
-      setError('Unable to sign up');
+      setError('Email already in use');
     }
 
     if (ok) {
