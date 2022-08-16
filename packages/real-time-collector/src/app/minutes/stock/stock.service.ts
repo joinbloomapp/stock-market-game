@@ -306,7 +306,7 @@ export class StockMinutesService extends AbstractMinutesService {
         RETURNING "value"`,
           [x.playerId, x.gameId]
         )
-      ).value;
+      )[0].value;
       await this.upsertHistoricalAggregatePositionTables(
         conn,
         "HistoricalAggregatePositionMinute",
