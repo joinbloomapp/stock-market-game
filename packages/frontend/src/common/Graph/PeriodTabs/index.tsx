@@ -22,7 +22,7 @@ export default function PeriodTabs({
   periods,
 }: IPeriodTabsProps) {
   return (
-    <div className={twMerge('flex space-x-1', className)}>
+    <div className={twMerge('flex justify-center items-center space-x-1', className)}>
       {periods.map((p) => (
         <Button
           key={p.value}

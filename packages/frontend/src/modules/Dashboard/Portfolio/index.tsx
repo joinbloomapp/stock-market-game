@@ -180,7 +180,7 @@ export default function Portfolio() {
         <button
           onClick={() => clickAsset(position.ticker)}
           key={position.ticker}
-          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
         >
           <div className="flex space-x-4 w-full">
             <img
@@ -211,7 +211,7 @@ export default function Portfolio() {
     };
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-7">
+      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-4 md:px-7">
         <p className="text-t-1 text-lg mb-2">
           {isPlayerPortfolio ? `${player?.name}'s` : 'My'} stocks
         </p>
@@ -248,7 +248,7 @@ export default function Portfolio() {
         <button
           onClick={() => clickAsset(asset.ticker)}
           key={asset.ticker}
-          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
         >
           <div className="flex space-x-4 w-full">
             <img
@@ -273,7 +273,7 @@ export default function Portfolio() {
     };
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-7">
+      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-4 md:px-7">
         <p className="text-t-1 text-lg mb-2">Popular stocks</p>
         <div>
           {!loading ? (
@@ -424,16 +424,18 @@ export default function Portfolio() {
         isPlayerPortfolio={!!isPlayerPortfolio}
         player={player as Player}
       />
-      <StatsBar stats={statsBars} />
+      <StatsBar stats={statsBars} className="mt-4" />
       {!isPlayerPortfolio && game?.status === GameStatus.ACTIVE && positions.length >= 1 && (
-        <Button
-          shadow
-          type={ButtonType.Primary}
-          className="w-full h-14 my-4"
-          onClick={() => navigate(`/dashboard/g/${game?.inviteCode}/browse`)}
-        >
-          Buy a stock
-        </Button>
+        <div className="-ml-4 px-4 my-4 w-full fixed bottom-0 md:static md:-ml-0 md:px-0 z-30">
+          <Button
+            shadow
+            type={ButtonType.Primary}
+            className="w-full h-14 my-4"
+            onClick={() => navigate(`/dashboard/g/${game?.inviteCode}/browse`)}
+          >
+            Buy a stock
+          </Button>
+        </div>
       )}
       {game?.status === GameStatus.FINISHED && (
         <>

@@ -100,12 +100,7 @@ export default function Dashboard() {
         <div className="w-[340px] hidden md:block">
           <Sidebar />
         </div>
-        <div
-          className={cls('z-10 w-full flex justify-center pb-24 md:pb-10 px-4 md:px-0', {
-            'pt-10': !viewingOtherUser,
-            'pt-14': viewingOtherUser,
-          })}
-        >
+        <div className="z-10 w-full flex justify-center pb-24 pt-10 md:pb-10 px-4 md:px-0">
           <div className="w-full md:w-[65%] max-w-3xl">
             <Routes>
               <Route path="/portfolio" element={<Portfolio />} />

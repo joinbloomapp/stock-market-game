@@ -59,7 +59,12 @@ export default function PortfolioGraph({
         }
 
         return (
-          <Button shadow type={ButtonType.Primary} className="w-1/3 h-14" onClick={startGame}>
+          <Button
+            shadow
+            type={ButtonType.Primary}
+            className="w-1/2 md:w-1/3 h-14"
+            onClick={startGame}
+          >
             Start the game
           </Button>
         );
@@ -85,7 +90,12 @@ export default function PortfolioGraph({
       }
 
       return (
-        <Button shadow type={ButtonType.Primary} className="w-1/3 h-14" onClick={buyFirstStock}>
+        <Button
+          shadow
+          type={ButtonType.Primary}
+          className="w-1/2 md:w-1/3 h-14"
+          onClick={buyFirstStock}
+        >
           Buy my first stock
         </Button>
       );
