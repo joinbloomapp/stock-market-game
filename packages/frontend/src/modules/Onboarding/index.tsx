@@ -168,7 +168,7 @@ export default function Onboarding() {
 
   const renderFooterActions = () => {
     return (
-      <div className="absolute bottom-8 text-center w-[482px] text-t-1 mt-8">
+      <div className="text-center w-[482px] text-t-1 mt-8">
         <p className="text-md flex space-x-4 justify-center text-t-1">
           {!isCreatingGame && (
             <Link
@@ -194,11 +194,10 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="bg-polka bg-center bg-cover h-screen">
+    <div className="bg-polka bg-center bg-cover bg-repeat min-h-screen">
       <Header />
-      <div className="flex justify-center text-t-1 mt-16 px-2 md:px-16 lg:px-24">
-        {renderFooterActions()}
-        <div className="bg-b-2 w-[482px] h-min rounded-xl text-center p-10 absolute-vertical-center">
+      <div className="flex flex-col justify-center items-center text-t-1 mt-24 px-2 md:px-16 lg:px-24">
+        <div className="bg-b-2 w-[482px] rounded-xl text-center p-10">
           <div className="flex flex-col justify-between h-full space-y-10">
             <form onSubmit={onSubmit} className="w-full flex flex-col space-y-4">
               <div className="flex flex-col space-y-4">
@@ -307,6 +306,7 @@ export default function Onboarding() {
             </form>
           </div>
         </div>
+        {renderFooterActions()}
       </div>
     </div>
   );
