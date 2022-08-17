@@ -21,12 +21,20 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
 
   const renderPlayersCard = () => {
     return (
-      <div className="bg-b-2 w-full overflow-y-scroll rounded-xl px-8 pt-8 pb-16">
+      <div className="bg-b-2 w-full overflow-y-scroll rounded-xl px-8 pt-8 pb-16 min-h-[280px]">
         {players.length > 0 ? (
           <div className="flex flex-col">
             <p>{players.length} players</p>
             <div className="flex flex-col space-y-2 mt-4">
-              {players.map((p, i) => (
+              {[
+                ...players,
+                ...players,
+                ...players,
+                ...players,
+                ...players,
+                ...players,
+                ...players,
+              ].map((p, i) => (
                 <div
                   key={p.name}
                   className="flex justify-between w-full pb-4 pt-2 text-left border-b-0.5 border-line-1"
@@ -50,7 +58,7 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
             </div>
           </div>
         ) : (
-          <div className="flex flex-col h-full justify-center items-center text-t-3 min-h-[360px]">
+          <div className="flex flex-col h-full justify-center items-center text-t-3 min-h-[280px]">
             <Icon56UserAddOutline className="mx-auto" />
             <p>Your joined players will show up here</p>
           </div>

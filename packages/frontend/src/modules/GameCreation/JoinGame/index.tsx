@@ -45,16 +45,7 @@ export default function JoinGame() {
 
   return (
     <>
-      <div className="absolute bottom-8 text-center w-[482px] text-t-1">
-        <Link
-          to="/game/create"
-          className="text-t-1 underline underline-offset-2"
-          onClick={() => Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)}
-        >
-          Create a game
-        </Link>
-      </div>
-      <div className="bg-b-2 w-[482px] h-min rounded-xl text-center p-12 absolute-vertical-center">
+      <div className="bg-b-2 w-[482px] h-[350px] rounded-xl text-center p-12 absolute-vertical-center">
         <div className="flex flex-col space-y-8 h-full">
           <h1 className="text-2xl font-bold">Join a game</h1>
           <form className="space-y-10" onSubmit={onSubmit}>
@@ -86,6 +77,15 @@ export default function JoinGame() {
         </div>
       </div>
       {error && <p className="absolute bottom-48 text-u-negative text-center text-md">{error}</p>}
+      <div className="absolute bottom-8 text-center w-[482px] text-t-1 mt-8">
+        <Link
+          to="/game/create"
+          className="text-t-1 underline underline-offset-2"
+          onClick={() => Analytics.track(OnboardingEvents.CLICKED_CREATE_GAME)}
+        >
+          Create a game
+        </Link>
+      </div>
     </>
   );
 }
