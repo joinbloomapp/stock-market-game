@@ -26,15 +26,7 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
           <div className="flex flex-col">
             <p>{players.length} players</p>
             <div className="flex flex-col space-y-2 mt-4">
-              {[
-                ...players,
-                ...players,
-                ...players,
-                ...players,
-                ...players,
-                ...players,
-                ...players,
-              ].map((p, i) => (
+              {players.map((p, i) => (
                 <div
                   key={p.name}
                   className="flex justify-between w-full pb-4 pt-2 text-left border-b-0.5 border-line-1"
