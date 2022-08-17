@@ -77,9 +77,9 @@ function App() {
   }, []);
 
   const renderRoutes = () => {
-    if (isMobile) {
-      return <Route path="/mobile" element={<MobileLanding />} />;
-    }
+    // if (isMobile) {
+    //   return <Route path="/mobile" element={<MobileLanding />} />;
+    // }
 
     return (
       <>
@@ -115,7 +115,7 @@ function App() {
         <Router>
           <Routes>
             {renderRoutes()}
-            <Route path="*" element={<Navigate to={isMobile ? '/mobile' : '/404'} replace />} />
+            <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
         </Router>
       </UserContext.Provider>
