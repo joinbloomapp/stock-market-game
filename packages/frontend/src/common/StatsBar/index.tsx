@@ -4,6 +4,7 @@
  */
 
 import cls from 'classnames';
+import { twMerge } from 'tailwind-merge';
 import Loader from '../../components/Loader';
 import MathUtils from '../../utils/MathUtils';
 import StyleUtils from '../../utils/StyleUtils';
@@ -17,21 +18,33 @@ export interface StatsBarItem {
 
 interface IStatsBarProps {
   stats: StatsBarItem[];
+  className?: string;
 }
 
-export default function StatsBar({ stats = [] }: IStatsBarProps) {
+export default function StatsBar({ stats = [], className }: IStatsBarProps) {
   return (
-    <div className="flex justify-around rounded-2xl bg-b-2 text-t-1 mt-6 py-6 divide-x-1 divide-line-1">
+    <div
+      className={twMerge(
+        'flex flex-wrap justify-between rounded-2xl md:bg-b-3 text-t-1 md:divide-x-1 md:divide-line-1',
+        className
+      )}
+    >
       {stats ? (
-        stats.map((s) => {
+        stats.map((s, i) => {
           return (
-            <div key={s.title} className="w-full h-full px-7">
+            <div
+              key={s.title}
+              className={cls('md:w-auto bg-b-3 rounded-2xl py-4 md:bg-transparent md:mt-0 px-7', {
+                'w-full': i == 0,
+                'w-1/2 mt-2': i !== 0,
+              })}
+            >
               <p className="text-t-2 text-lg">{s.title}</p>
-              <div className="flex items-center space-x-4">
-                <h6 className="font-semibold">{s.formattedDollar}</h6>
+              <div className="flex flex-wrap items-center md:space-x-4">
+                <h6 className="font-semibold w-full md:w-auto">{s.formattedDollar}</h6>
                 {s.percent !== undefined && (
                   <>
-                    <p className="text-i-1">—</p>
+                    <p className="text-i-1 hidden md:block">—</p>
                     <div
                       className={cls(
                         'flex space-x-1 text-sm font-medium',

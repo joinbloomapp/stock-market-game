@@ -98,7 +98,7 @@ export default function OrderHistoryCard({
       <button
         onClick={() => clickAsset(order.ticker)}
         key={order.id}
-        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
       >
         <div className="flex space-x-4 w-full">
           <img
@@ -107,16 +107,16 @@ export default function OrderHistoryCard({
             className="rounded-full w-11 h-11 bg-white object-cover object-center"
           />
           <div className="flex flex-row justify-between w-full">
-            <div>
-              <p>
+            <div className="w-full">
+              <p className="text-md md:text-lg">
                 You {getOrderTypeText(order.type)}{' '}
                 <span className="font-medium">{order.ticker}</span>
               </p>
               <p className="text-t-2 text-sm">{dayjs(order.createdAt).format('MMM D, YYYY')}</p>
             </div>
-            <div className="text-right">
-              <p className={'text-t-1'}>{StringUtils.USD(order.notional)}</p>
-              <p className="text-sm text-t-2">
+            <div className="text-right w-full">
+              <p className="text-t-1">{StringUtils.USD(order.notional)}</p>
+              <p className="text-xs md:text-sm text-t-2">
                 {order.quantity} shares @ {StringUtils.USD(order.boughtAt)}
               </p>
             </div>
@@ -135,12 +135,12 @@ export default function OrderHistoryCard({
 
   return (
     <div
-      className={cls('rounded-2xl bg-b-2 text-t-1 py-5 px-7', {
+      className={cls('rounded-2xl bg-b-2 text-t-1 py-5 px-4 md:px-7', {
         'min-h-[469px]': orders.length === 0,
       })}
     >
       <div className="flex justify-between">
-        <p className="text-t-1 text-lg mb-4">Order history</p>
+        <p className="text-t-1 text-lg mb-4 w-1/2">Order history</p>
         <Input
           name="player"
           type="text"
