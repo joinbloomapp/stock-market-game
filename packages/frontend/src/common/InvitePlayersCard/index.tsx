@@ -78,16 +78,16 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
         >
           <p>Invite players</p>
           <div
-            className={cls('flex w-full h-full items-center', {
-              'flex-col justify-center': lobby,
-              'justify-between': dashboard,
+            className={cls('flex flex-wrap justify-center w-full h-full items-center', {
+              'flex-col': lobby,
+              'md:justify-between': dashboard,
             })}
           >
             <div className="flex items-center">
               <h1
-                className={cls('tracking-[16px] md:tracking-[21.5px] font-semibold text-a-1', {
-                  'mt-2 text-3xl md:text-6xl': lobby,
-                  'mt-4 text-5xl': dashboard,
+                className={cls('tracking-[12px] md:tracking-[21.5px] font-semibold text-a-1', {
+                  'text-3xl md:text-6xl': lobby,
+                  'text-5xl': dashboard,
                 })}
                 style={{ textShadow: '0px 0px 0px #912054' }}
               >
