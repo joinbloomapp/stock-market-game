@@ -12,13 +12,13 @@ import Input, { InputHeight, InputStyle } from '../../components/Input';
 import Loader from '../../components/Loader';
 import { DashboardContext } from '../../modules/Dashboard';
 import GameService from '../../services/Game';
-import { Game, Player } from '../../services/Game/types';
+import { Game, Player, PlayerPartial } from '../../services/Game/types';
 import Analytics from '../../system/Analytics';
 import { GameEvents } from '../../system/Analytics/events/GameEvents';
 
 interface IGameEditInfoCardProps {
   game: Game;
-  players: Player[];
+  players: PlayerPartial[];
 }
 
 interface IEditDataProps {
