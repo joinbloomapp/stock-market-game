@@ -37,7 +37,7 @@ export class GameDto {
   status: GameStatusEnum;
   userInGame: boolean;
 
-  requestingUserPlayerId: string;
+  playerId: string;
 
   constructor(
     game: GameEntity,
@@ -45,7 +45,7 @@ export class GameDto {
       playerRecs?: PlayerEntity[];
       userInGame: boolean;
       req: Request;
-      requestingUserPlayerId?: string;
+      playerId?: string;
     }
   ) {
     this.id = String(game.id);
@@ -58,7 +58,7 @@ export class GameDto {
     this.extra = game.extra;
     this.status = game.status;
     this.userInGame = opts.userInGame;
-    this.requestingUserPlayerId = opts.requestingUserPlayerId;
+    this.playerId = opts.playerId;
 
     if (opts.playerRecs) {
       if (opts.userInGame) {

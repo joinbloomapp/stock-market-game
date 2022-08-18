@@ -5,7 +5,7 @@
 
 import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 import Button, { ButtonType } from '../../components/Button';
 import CountdownTimer from '../../components/CountdownTimer';
 import { DashboardContext } from '../../modules/Dashboard';
@@ -17,7 +17,7 @@ import StringUtils from '../../utils/StringUtils';
 import ConfirmModal from '../ConfirmModal';
 
 export default function GameInfoCard() {
-  const portfolio = useMatch('/dashboard/g/:inviteCode/portfolio');
+  const navigate = useNavigate();
   const { game, setGame } = useContext(DashboardContext);
   const [open, setOpen] = useState(false);
 
@@ -35,7 +35,18 @@ export default function GameInfoCard() {
     fetchGame();
   };
 
-  const showEndGameButton = game?.isGameAdmin && game?.status === GameStatus.ACTIVE;
+  const leaveGame = async () => {
+    await GameService.removePlayer(game?.id as string, game?.playerId as string);
+    Analytics.track(GameEvents.LEAVE_GAME, {
+      gameId: game?.id,
+      inviteCode: game?.inviteCode,
+      playerId: game?.playerId,
+    });
+    navigate(`/game/${game?.inviteCode}`);
+  };
+
+  const showEndGameButton =
+    (game?.isGameAdmin && game?.status === GameStatus.ACTIVE) || !game?.isGameAdmin;
 
   return (
     <div className="rounded-2xl bg-b-2 text-t-1 py-5 px-7">
@@ -48,7 +59,7 @@ export default function GameInfoCard() {
             className="w-42 h-8 text-u-negative"
             onClick={() => setOpen(true)}
           >
-            End game
+            {game?.isGameAdmin ? 'End game' : 'Leave game'}
           </Button>
         )}
       </div>
@@ -91,8 +102,8 @@ export default function GameInfoCard() {
       </div>
       {showEndGameButton && (
         <ConfirmModal
-          text="Are you sure you want to end the game?"
-          onConfirm={endGame}
+          text={`Are you sure you want to ${game?.isGameAdmin ? 'end' : 'leave'} the game?`}
+          onConfirm={game?.isGameAdmin ? endGame : leaveGame}
           open={open}
           setOpen={setOpen}
         />

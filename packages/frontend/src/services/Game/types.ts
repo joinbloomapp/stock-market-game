@@ -24,10 +24,7 @@ export interface Game {
   admins: Pick<User, 'name' | 'email'>[];
   status: GameStatus;
   userInGame: boolean;
-}
-
-export interface BasicGame extends Omit<Game, 'extra' | 'admin'> {
-  admin: Pick<User, 'name'>;
+  playerId: string;
 }
 
 export interface CreateGame {

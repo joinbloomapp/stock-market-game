@@ -128,7 +128,7 @@ export class GameService {
           req: req,
           playerRecs: gameAdmins[x.id],
           userInGame: true,
-          requestingUserPlayerId: playerRecs.find((y) => y.gameId === x.id)?.id,
+          playerId: playerRecs.find((y) => y.gameId === x.id)?.id,
         })
     );
   }
@@ -172,7 +172,7 @@ export class GameService {
       req: req,
       playerRecs: [admin],
       userInGame: true,
-      requestingUserPlayerId: admin.id,
+      playerId: admin.id,
     });
   }
 
@@ -260,7 +260,7 @@ export class GameService {
 
     // check if in game
     let isInGame = false;
-    let requestingUserPlayerId = null;
+    let playerId = null;
     if (req.user.id) {
       const player = await this.playerRepository.findOne(
         { userId: req.user.id, gameId: game.id },
@@ -268,7 +268,7 @@ export class GameService {
       );
       if (player) {
         isInGame = true;
-        requestingUserPlayerId = player.id;
+        playerId = player.id;
       }
     }
 
@@ -289,7 +289,7 @@ export class GameService {
       req: req,
       playerRecs: playerRecs,
       userInGame: !!isInGame,
-      requestingUserPlayerId: requestingUserPlayerId,
+      playerId: playerId,
     });
   }
 

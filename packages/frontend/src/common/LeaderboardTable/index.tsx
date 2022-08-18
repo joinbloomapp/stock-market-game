@@ -68,8 +68,8 @@ export default function LeaderboardTable({
 
   const renderDropdown = (p: Player) => {
     return (
-      ((game?.isGameAdmin && p?.userId !== user?.id) ||
-        (!game?.isGameAdmin && p?.userId === user?.id)) && (
+      game?.isGameAdmin &&
+      p?.userId !== user?.id && (
         <Dropdown
           menuBtn={<Icon16MoreVertical />}
           items={[
