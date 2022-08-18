@@ -7,10 +7,10 @@ import Header from '../Header';
 
 export default function MobileLanding() {
   return (
-    <div className="bg-polka bg-cover bg-center min-h-screen">
+    <div className="bg-polka bg-cover bg-repeat bg-center min-h-screen">
       <Header />
       <div className="flex w-full justify-center text-t-1">
-        <div className="bg-b-2 w-[482px] h-[120px] rounded-xl p-12 absolute-vertical-center">
+        <div className="bg-b-2 h-[130px] rounded-xl p-12 absolute-vertical-center px-4">
           <h1 className="text-2xl font-bold text-center">Mobile version coming soon!</h1>
         </div>
       </div>

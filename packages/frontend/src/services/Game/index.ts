@@ -1,3 +1,4 @@
+import { PlayerPartial } from './types';
 /*
  * Copyright (c) 2022 Contour Labs, Inc.
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -20,6 +21,7 @@ import {
   Player,
   UpdateGame,
 } from './types';
+import ArrayUtils from '../../utils/ArrayUtils';
 
 namespace GameService {
   /**
@@ -117,6 +119,17 @@ namespace GameService {
    */
   export async function getPlayers(gameId: string): Promise<Player[]> {
     const res = await client.get(`/games/${gameId}/players`);
+    return res?.data;
+  }
+
+  /**
+   * Gets a list of players and their names (used when polling for new players in admin lobby)
+   *
+   * @param gameId game id
+   * @returns list of players and their names
+   */
+  export async function getPlayerNames(gameId: string): Promise<PlayerPartial[]> {
+    const res = await client.get(`/games/${gameId}/players/names`);
     return res?.data;
   }
 

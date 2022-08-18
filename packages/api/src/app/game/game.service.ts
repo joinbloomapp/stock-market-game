@@ -1017,7 +1017,10 @@ export class GameService {
     });
   }
 
-  async getPlayerNames(req: Request, gameId: string): Promise<PlayerNamesDto> {
+  async getPlayerNames(
+    req: Request,
+    gameId: string
+  ): Promise<PlayerNamesDto[]> {
     if (!(await this.isInGame(req, gameId, false))) {
       throw new ForbiddenException("You are not a part of this game");
     }
@@ -1025,7 +1028,7 @@ export class GameService {
       where: { gameId: gameId },
       join: { alias: "player", innerJoinAndSelect: { user: "player.user" } },
     });
-    return { names: players.map((x) => x.user.name) };
+    return players.map((x) => new PlayerNamesDto(x));
   }
 
   async hasGameStarted(gameId: string): Promise<boolean> {

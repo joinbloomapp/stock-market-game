@@ -107,7 +107,7 @@ export class GameController {
   getPlayerNames(
     @Req() req: Request,
     @Param("gameId", ValidateBigSerialPipe) gameId: string
-  ): Promise<PlayerNamesDto> {
+  ): Promise<PlayerNamesDto[]> {
     return this.gameService.getPlayerNames(req, gameId);
   }
 

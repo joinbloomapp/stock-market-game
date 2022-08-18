@@ -3,38 +3,44 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import Loader from '../../../components/Loader';
 import GameService from '../../../services/Game';
-import { Game, GameStatus, Player } from '../../../services/Game/types';
+import { Game, GameStatus, PlayerPartial } from '../../../services/Game/types';
 import Analytics from '../../../system/Analytics';
 import { GameEvents } from '../../../system/Analytics/events/GameEvents';
-import { OnboardingEvents } from '../../../system/Analytics/events/OnboardingEvents';
+import ArrayUtils from '../../../utils/ArrayUtils';
 import AdminLobby from './AdminLobby';
 import PlayerLobby from './PlayerLobby';
 
 export default function Lobbies() {
   const [game, setGame] = useState<Game>();
   const [error, setError] = useState<string>('');
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<PlayerPartial[]>([]);
+  const intervalRef = useRef<NodeJS.Timer>();
 
   const { user } = useContext(UserContext);
   const { inviteCode } = useParams();
 
-  const fetchPlayers = async (gameId: string) => {
-    const players = await GameService.getPlayers(gameId);
-    setPlayers(players);
+  const fetchPlayers = async (gameId?: string) => {
+    const players = await GameService.getPlayerNames((gameId as string) || (game?.id as string));
+    setPlayers(ArrayUtils.orEmptyArray(players));
   };
 
   const fetchData = async () => {
     try {
       const game = await GameService.getGameByInviteCode(inviteCode!);
       setGame(game);
-      if (user && game.userInGame) {
-        // Only authenticated users can see the other players
-        fetchPlayers(game?.id as string);
+      if (user && game?.userInGame) {
+        await fetchPlayers(game?.id);
+        // Poll for players every 10 seconds
+        intervalRef.current = setInterval(async () => {
+          if (user && game?.userInGame) {
+            await fetchPlayers(game?.id);
+          }
+        }, 10000);
       }
     } catch (err) {
       setError('Game not found');
@@ -43,6 +49,7 @@ export default function Lobbies() {
 
   useEffect(() => {
     fetchData();
+    return () => clearInterval(intervalRef.current);
   }, []);
 
   const removePlayer = async (playerId: string) => {
