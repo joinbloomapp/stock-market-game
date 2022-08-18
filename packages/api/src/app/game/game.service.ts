@@ -911,12 +911,7 @@ export class GameService {
         });
       }
     }
-    const nowMoment = momentTz("America/New_York");
-    if (
-      values.length &&
-      (nowMoment.hour() < 4 ||
-        (nowMoment.hour() === 4 && nowMoment.minute() < 15))
-    ) {
+    if (values.length) {
       values[values.length - 1].createdAt = new Date();
     }
     return values;
