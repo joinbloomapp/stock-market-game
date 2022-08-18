@@ -997,12 +997,12 @@ export class GameService {
       playerValuePositions[x.playerId] = x.value;
     });
     players.sort((a, b) => {
-      const aValue = playerValuePositions[a.id] ?? 0;
-      const bValue = playerValuePositions[b.id] ?? 0;
+      const aValue = playerValuePositions[a.id] ?? a.buyingPower;
+      const bValue = playerValuePositions[b.id] ?? b.buyingPower;
       return bValue - aValue;
     });
     return players.map((x, i) => {
-      const totalValue = playerValuePositions[x.id] ?? x.buyingPower;
+      const totalValue = playerValuePositions[x.id];
       const portfolioValue = totalValue - x.buyingPower;
       const totalChange = totalValue - game.defaultBuyingPower;
       const totalChangePercent = (totalChange / game.defaultBuyingPower) * 100;
