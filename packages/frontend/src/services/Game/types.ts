@@ -57,8 +57,7 @@ export interface Player {
   totalChange: number;
 }
 
-export interface PlayerPartial
-  extends Pick<Player, 'playerId' | 'userId' | 'isGameAdmin' | 'name'> {}
+export type PlayerPartial = Pick<Player, 'playerId' | 'userId' | 'isGameAdmin' | 'name'>;
 
 export interface GetGamesQueryParams {
   status?: GameStatus;
