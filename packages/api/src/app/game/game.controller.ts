@@ -32,6 +32,7 @@ import { PlayerDto } from "./dto/player.dto";
 import { PopularAssetDto } from "./dto/popular-asset.dto";
 import { GameService } from "./game.service";
 import { ValidateBigSerialPipe } from "src/utils/validator";
+import { PlayerNamesDto } from "./dto/player-names.dto";
 
 @ApiTags("Game")
 @Controller()
@@ -100,6 +101,14 @@ export class GameController {
     @Param("gameId", ValidateBigSerialPipe) gameId: string
   ): Promise<PlayerDto[]> {
     return this.gameService.getPlayers(req, gameId);
+  }
+
+  @Get(":gameId/players/names")
+  getPlayerNames(
+    @Req() req: Request,
+    @Param("gameId", ValidateBigSerialPipe) gameId: string
+  ): Promise<PlayerNamesDto> {
+    return this.gameService.getPlayerNames(req, gameId);
   }
 
   @Delete(":gameId/players/:playerId")

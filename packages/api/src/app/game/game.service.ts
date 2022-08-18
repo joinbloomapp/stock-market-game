@@ -46,6 +46,7 @@ import { PlayerHoldingsValueDto } from "./dto/holdings-value.dto";
 import { LatestEnum } from "./dto/latest.enum";
 import { PlayerDto } from "./dto/player.dto";
 import { PopularAssetDto } from "./dto/popular-asset.dto";
+import { PlayerNamesDto } from "./dto/player-names.dto";
 
 @Injectable()
 export class GameService {
@@ -1019,6 +1020,17 @@ export class GameService {
         portfolioValue
       );
     });
+  }
+
+  async getPlayerNames(req: Request, gameId: string): Promise<PlayerNamesDto> {
+    if (!(await this.isInGame(req, gameId, false))) {
+      throw new ForbiddenException("You are not a part of this game");
+    }
+    const players = await this.playerRepository.find({
+      where: { gameId: gameId },
+      join: { alias: "player", innerJoinAndSelect: { user: "player.user" } },
+    });
+    return { names: players.map((x) => x.user.name) };
   }
 
   async hasGameStarted(gameId: string): Promise<boolean> {
