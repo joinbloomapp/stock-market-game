@@ -1002,7 +1002,7 @@ export class GameService {
       return bValue - aValue;
     });
     return players.map((x, i) => {
-      const totalValue = playerValuePositions[x.id];
+      const totalValue = playerValuePositions[x.id] ?? x.buyingPower;
       const portfolioValue = totalValue - x.buyingPower;
       const totalChange = totalValue - game.defaultBuyingPower;
       const totalChangePercent = (totalChange / game.defaultBuyingPower) * 100;

@@ -90,7 +90,7 @@ export class CurrentPositionDto {
     }
     this.todayChangePercent =
       (this.todayChange /
-        (stockPrice.oldPrice * (ydayShares || averageToday?.numBuys || 1))) *
+        (stockPrice.oldPrice * (ydayShares || position.quantity || 1))) *
       100;
 
     this.assetId = position.stockId;
