@@ -364,13 +364,16 @@ export class CategoriesService {
         categoryAssets.splice(index, 1);
       }
     }
-    for (const stock of chosenStocks.reverse()) {
-      categoryAssets.unshift({
-        name: stock.name,
-        ticker: stock.ticker,
-        image: stock.image,
-        latestPrice: stockIdPriceMapping[stock.id],
-      });
+    for (const stock of topAssets.reverse()) {
+      const stockEntity = chosenStocks.find((s) => s.ticker === stock);
+      if (stockEntity) {
+        categoryAssets.unshift({
+          name: stockEntity.name,
+          ticker: stockEntity.ticker,
+          image: stockEntity.image,
+          latestPrice: stockIdPriceMapping[stockEntity.id],
+        });
+      }
     }
     const count = await this.stockCategoryMappingRepository.count({
       categoryId: categoryId,
