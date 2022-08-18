@@ -1006,7 +1006,7 @@ export class GameService {
       return bValue - aValue;
     });
     return players.map((x, i) => {
-      const totalValue = playerValuePositions[x.id] || x.buyingPower;
+      const totalValue = playerValuePositions[x.id] ?? x.buyingPower;
       const portfolioValue = totalValue - x.buyingPower;
       const totalChange = totalValue - game.defaultBuyingPower;
       const totalChangePercent = (totalChange / game.defaultBuyingPower) * 100;
@@ -1048,7 +1048,10 @@ export class GameService {
     return stocks.map((s) => new PopularAssetDto(s));
   }
 
-  private async _getHoldingsValue(gameId: string, player: PlayerEntity) {
+  private async _getHoldingsValue(
+    gameId: string,
+    player: PlayerEntity
+  ): Promise<PlayerHoldingsValueDto> {
     if (!player) {
       throw new ForbiddenException("You are not a part of this game");
     }

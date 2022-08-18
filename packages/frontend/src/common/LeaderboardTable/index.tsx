@@ -160,7 +160,7 @@ export default function LeaderboardTable({
                       StyleUtils.getChangeStyle(p?.totalChangePercent || 0)
                     )}
                   >
-                    {StringUtils.signNumber(p?.totalChangePercent || 0, 'percent')}
+                    {StringUtils.signNumber((p?.totalChangePercent || 0) / 100, 'percent')}
                   </div>
                   <div className="flex justify-between items-center basis-64 space-x-4">
                     <Button
