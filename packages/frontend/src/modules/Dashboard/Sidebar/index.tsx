@@ -121,8 +121,8 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="fixed text-t-1 z-20 space-y-2 top-0 bottom-0">
-      <div className=" bg-b-3 w-[280px] h-full overflow-y-auto">
+    <div className="fixed text-t-1 z-20 space-y-2 top-0 bottom-0 w-[280px]">
+      <div className=" bg-b-3 h-full overflow-y-auto">
         <div className="px-5">
           <Link to="portfolio">
             <img alt="Bloom logo" className="py-6" src={Logo} width={142} height={32} />
@@ -160,7 +160,7 @@ export default function Sidebar() {
             <Loader />
           </div>
         )}
-        <ul className="px-2">
+        <ul className="mt-2 px-2">
           {topItems.map((item, i) => (
             <React.Fragment key={item.title}>
               <Link

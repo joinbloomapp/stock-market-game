@@ -9,7 +9,7 @@ import cls from 'classnames';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Line, LineChart, Tooltip, YAxis } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from 'recharts';
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart';
 import Loader from '../../components/Loader';
 import Analytics from '../../system/Analytics';
@@ -170,39 +170,41 @@ export default function Graph({
       </div>
       <div className="h-[228px] w-full bg-b-3 light-pink-gradient mt-12 mb-4">
         {!loading && !graphDataError ? (
-          <LineChart
-            width={width}
-            height={totalHeight}
-            data={points}
-            margin={{
-              top: 10,
-              right: 32,
-              bottom: 10,
-              left: -58,
-            }}
-            onMouseMove={onMouseMove}
-            onMouseLeave={onMouseLeave}
-          >
-            <Tooltip
-              isAnimationActive={false}
-              position={{ y: -20 }}
-              content={<CustomTooltip />}
-              offset={activePeriod.tooltipOffset}
-            />
-            <YAxis
-              domain={[Math.min(...points.map((p) => p.y)), Math.max(...points.map((p) => p.y))]}
-              display="none"
-            />
-            <Line
-              type="monotone"
-              dataKey="y"
-              dot={<CustomizedDot />}
-              strokeWidth={3}
-              stroke="#FF4F83"
-              activeDot={{ stroke: 'white', strokeWidth: 2.75, r: 8, strokeDasharray: '' }}
-              tooltipType="none"
-            />
-          </LineChart>
+          <ResponsiveContainer width="100%" height={totalHeight}>
+            <LineChart
+              width={`${(width / totalWidth) * 100}%`}
+              height={totalHeight}
+              data={points}
+              margin={{
+                top: 10,
+                right: 32,
+                bottom: 10,
+                left: -58,
+              }}
+              onMouseMove={onMouseMove}
+              onMouseLeave={onMouseLeave}
+            >
+              <Tooltip
+                isAnimationActive={false}
+                position={{ y: -20 }}
+                content={<CustomTooltip />}
+                offset={activePeriod.tooltipOffset}
+              />
+              <YAxis
+                domain={[Math.min(...points.map((p) => p.y)), Math.max(...points.map((p) => p.y))]}
+                display="none"
+              />
+              <Line
+                type="monotone"
+                dataKey="y"
+                dot={<CustomizedDot />}
+                strokeWidth={3}
+                stroke="#FF4F83"
+                activeDot={{ stroke: 'white', strokeWidth: 2.75, r: 8, strokeDasharray: '' }}
+                tooltipType="none"
+              />
+            </LineChart>
+          </ResponsiveContainer>
         ) : (
           <div className="flex justify-center items-center h-full">
             {graphDataError ? emptyState || graphDataError : <Loader className="mx-auto" />}

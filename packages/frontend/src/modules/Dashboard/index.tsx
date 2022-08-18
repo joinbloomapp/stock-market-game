@@ -82,22 +82,26 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex min-h-screen text-t-1 z-10 bg-purple-polka bg-cover bg-center bg-repeat pt-10 pb-4">
-      <DashboardContext.Provider value={{ game, setGame, loading }}>
-        <Sidebar />
-        <div className="z-10 w-[760px] ml-[30vw]">
-          <Routes>
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/browse" element={<Browse />} />
-            <Route path="/history" element={<OrderHistory />} />
-            <Route path="/stock/:ticker" element={<IndividualStock />} />
-            <Route path="/players/:playerId" element={<Portfolio />} />
-            {game.isGameAdmin && <Route path="/settings" element={<GameSettings />} />}
-            <Route path="*" element={<Navigate replace to="/404" />} />
-          </Routes>
+    <DashboardContext.Provider value={{ game, setGame, loading }}>
+      <div className="flex h-full min-h-screen text-t-1 z-10 bg-purple-polka bg-fixed bg-center bg-repeat">
+        <div className="w-[340px] hidden md:block">
+          <Sidebar />
         </div>
-      </DashboardContext.Provider>
-    </div>
+        <div className="z-10 w-full flex justify-center pb-24 pt-10 md:pb-10 px-4 md:px-0">
+          <div className="w-full md:w-[65%] max-w-3xl">
+            <Routes>
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/browse" element={<Browse />} />
+              <Route path="/history" element={<OrderHistory />} />
+              <Route path="/stock/:ticker" element={<IndividualStock />} />
+              <Route path="/players/:playerId" element={<Portfolio />} />
+              {game.isGameAdmin && <Route path="/settings" element={<GameSettings />} />}
+              <Route path="*" element={<Navigate replace to="/404" />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
+    </DashboardContext.Provider>
   );
 }

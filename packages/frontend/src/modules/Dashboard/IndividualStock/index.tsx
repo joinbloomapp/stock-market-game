@@ -278,7 +278,7 @@ export default function IndividualStock() {
   return (
     <>
       {offset > window.innerHeight / 4 && (
-        <div className="fixed left-0 top-0 flex justify-center items-center h-18 py-4 z-40 w-full bg-b-2 nav-box-shadow space-x-2">
+        <div className="fixed left-0 md:left-[280px] top-0 right-0 flex justify-center items-center h-18 py-4 z-40 w-auto bg-b-2 nav-box-shadow space-x-2">
           <img
             src={basicInfo?.image}
             alt={basicInfo?.name}
