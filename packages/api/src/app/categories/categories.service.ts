@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import {
   StockCategoryEntity,
   StockCategoryMappingEntity,
+  StockEntity,
   StockPriceEntity,
 } from "@bloom-smg/postgresql";
 import { In, Repository } from "typeorm";
@@ -18,6 +19,8 @@ import { CategoryAssetDto } from "./dto/category-asset.dto";
 
 export class CategoriesService {
   constructor(
+    @InjectRepository(StockEntity)
+    private readonly stockRepository: Repository<StockEntity>,
     @InjectRepository(StockCategoryEntity)
     private readonly stockCategoryRepository: Repository<StockCategoryEntity>,
     @InjectRepository(StockCategoryMappingEntity)
@@ -61,12 +64,264 @@ export class CategoriesService {
     return new CategoryDto(category, count);
   }
 
+  private getTopCategoryAssetsTickers(name: string): string[] {
+    const top = {
+      "Energy & Utilities": [
+        "TSLA",
+        "BP",
+        "XOM",
+        "SHEL",
+        "GE",
+        "AEP",
+        "PTR",
+        "COP",
+        "OXY",
+        "EOG",
+        "PXD",
+        "MPC",
+        "SLB",
+        "SRE",
+        "POR",
+        "NGG",
+        "VLO",
+        "CEG",
+        "NFG",
+      ],
+      ETFs: [
+        "SPY",
+        "VOO",
+        "IVV",
+        "QQQ",
+        "VTI",
+        "VTV",
+        "VEA",
+        "IEFA",
+        "AGG",
+        "BND",
+        "VUG",
+        "VWO",
+        "IJR",
+        "IEMG",
+        "IWF",
+        "VIG",
+        "IJH",
+        "GLD",
+        "IWD",
+        "IWM",
+        "VO",
+        "VXUS",
+        "EFA",
+        "VYM",
+        "BNDX",
+        "VGT",
+        "ITOT",
+        "XLK",
+        "VCIT",
+        "VB",
+        "VCSH",
+        "XLV",
+        "BSV",
+        "SCHD",
+        "XLE",
+        "LQD",
+        "VEU",
+        "RSP",
+        "IVW",
+        "TIP",
+        "SCHX",
+        "XLF",
+        "MUB",
+        "USMV",
+        "IWB",
+        "IAU",
+        "DIA",
+        "IWR",
+        "IXUS",
+      ],
+      "Finance & Banking": [
+        "SCHW",
+        "JPM",
+        "MA",
+        "C",
+        "V",
+        "BAC",
+        "TD",
+        "SQ",
+        "PYPL",
+        "GS",
+        "WFC",
+        "PNC",
+        "AXP",
+        "COIN",
+        "HOOD",
+        "GDOT",
+        "SOFI",
+        "MORN",
+        "BCS",
+        "HSBC",
+        "NDAQ",
+        "BNS",
+        "NRDS",
+        "JEF",
+        "DB",
+        "FRC",
+        "USB",
+        "AON",
+        "IFS",
+        "WTW",
+        "ALLY",
+        "MCO",
+        "AXS",
+        "BFH",
+        "UPST",
+        "BRK-B",
+        "BSAC",
+        "BLK",
+        "LMND",
+      ],
+      Technology: [
+        "AAPL",
+        "MSFT",
+        "TSLA",
+        "GOOG",
+        "AMZN",
+        "META",
+        "DIS",
+        "RBLX",
+        "NFLX",
+        "TWTR",
+        "EA",
+        "NDAQ",
+        "PLTR",
+        "SHOP",
+        "ADBE",
+        "CRM",
+        "Z",
+        "CSCO",
+        "QCOM",
+        "ORCL",
+        "VMW",
+        "ADSK",
+        "WDAY",
+        "MSI",
+        "NET",
+        "TWLO",
+        "OKTA",
+        "PINS",
+        "DOCU",
+        "CTXS",
+        "U",
+        "GDDY",
+        "ZEN",
+      ],
+      Transportation: [
+        "TSLA",
+        "DMLRY",
+        "DAL",
+        "SAVE",
+        "AAL",
+        "FDX",
+        "ALK",
+        "VWAGY",
+        "TM",
+        "GM",
+        "BMWYY",
+        "NIO",
+        "UPS",
+        "JBLU",
+      ],
+      Tourism: ["ABNB", "EXPE", "MAR", "TRIP", "HLT", "RCL", "H", "NCLH"],
+      "Food & Drink": ["KO", "PEP", "K", "UTZ", "HSY", "MNST", "BYND", "BGS"],
+      Healthcare: [
+        "JNJ",
+        "CVS",
+        "PFE",
+        "MRNA",
+        "UNH",
+        "RHHBY",
+        "ABBV",
+        "NVO",
+        "TMO",
+        "MRK",
+        "AZN",
+        "ABT",
+        "GE",
+        "CI",
+        "BMY",
+        "BSX",
+      ],
+      Industrial: [
+        "BA",
+        "LMT",
+        "MMM",
+        "ADP",
+        "DD",
+        "DOW",
+        "AYI",
+        "BBY",
+        "HD",
+        "UPWK",
+      ],
+      "Media & Telecom": [
+        "TMUS",
+        "WBD",
+        "CMCSA",
+        "T",
+        "SONY",
+        "NTDOY",
+        "CRWD",
+        "VOD",
+        "EA",
+        "SIRI",
+        "FOXA",
+        "GME",
+        "HAS",
+        "PSO",
+        "MU",
+      ],
+      "Shopping & Retail": [
+        "SHOP",
+        "LULU",
+        "AMZN",
+        "TGT",
+        "HD",
+        "ETSY",
+        "WOOF",
+        "EBAY",
+        "BBY",
+        "COST",
+        "POSH",
+        "JWN",
+        "LOW",
+        "GME",
+        "DDS",
+      ],
+    };
+    return top[name] || [];
+  }
+
   async getCategoryAssets(
     categoryId: string,
     limit?: number,
     beforeCursor?: string,
     afterCursor?: string
   ): Promise<CategoryAssetsResponseDto> {
+    const category = await this.stockCategoryRepository.findOne(categoryId, {
+      select: ["name"],
+    });
+    if (!category) {
+      throw new NotFoundException(`Category with id ${categoryId} not found`);
+    }
+    let chosenStocks = [];
+    const topAssets = this.getTopCategoryAssetsTickers(category.name);
+    if (!beforeCursor && !afterCursor) {
+      chosenStocks = await this.stockRepository.find({
+        where: {
+          ticker: In(topAssets),
+        },
+        select: ["id", "name", "image", "ticker"],
+      });
+    }
     const paginator = buildPaginator({
       entity: StockCategoryMappingEntity,
       paginationKeys: ["id"],
@@ -86,6 +341,7 @@ export class CategoriesService {
       .leftJoinAndSelect("s.stock", "stock");
     const { data, cursor } = await paginator.paginate(query);
     const stockIds = data.map((mapping) => mapping.stockId);
+    stockIds.push(...chosenStocks.map((stock) => stock.id));
     const stocks = await this.stockPriceRepository.find({
       where: { stockId: In(stockIds) },
       select: ["stockId", "price"],
@@ -100,6 +356,22 @@ export class CategoriesService {
       image: mapping.stock.image,
       latestPrice: stockIdPriceMapping[mapping.stockId],
     }));
+    for (const ticker of topAssets) {
+      const index = categoryAssets.findIndex(
+        (asset) => asset.ticker === ticker
+      );
+      if (index > -1) {
+        categoryAssets.splice(index, 1);
+      }
+    }
+    for (const stock of chosenStocks.reverse()) {
+      categoryAssets.unshift({
+        name: stock.name,
+        ticker: stock.ticker,
+        image: stock.image,
+        latestPrice: stockIdPriceMapping[stock.id],
+      });
+    }
     const count = await this.stockCategoryMappingRepository.count({
       categoryId: categoryId,
     });

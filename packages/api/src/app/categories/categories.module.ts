@@ -8,6 +8,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import {
   StockCategoryEntity,
   StockCategoryMappingEntity,
+  StockEntity,
   StockPriceEntity,
 } from "@bloom-smg/postgresql";
 import { CategoriesService } from "./categories.service";
@@ -21,6 +22,7 @@ const providers = [CategoriesService];
       StockCategoryMappingEntity,
       StockCategoryEntity,
       StockPriceEntity,
+      StockEntity,
     ]),
   ],
   controllers: [CategoriesController],
