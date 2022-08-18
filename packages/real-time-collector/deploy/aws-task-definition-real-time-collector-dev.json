@@ -51,7 +51,7 @@
           "valueFrom": "arn:aws:ssm:us-east-1:968542545167:parameter/smg-dev/api/PG_DATABASE"
         }
       ],
-      "memory": "1600",
+      "memory": "3900",
       "cpu": "1024",
       "essential": true,
       "portMappings": [
