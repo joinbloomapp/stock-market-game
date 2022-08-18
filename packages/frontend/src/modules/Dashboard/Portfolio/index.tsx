@@ -387,7 +387,7 @@ export default function Portfolio() {
             </div>
             <div>
               <div className={cls(StyleUtils.getChangeStyle(player?.totalChangePercent || 0))}>
-                {StringUtils.signNumber(player?.totalChangePercent || 0, 'percent')}
+                {StringUtils.signNumber((player?.totalChangePercent || 0) / 100, 'percent')}
               </div>
               <p className="text-sm text-t-2">{StringUtils.USD(player?.totalValue as number)}</p>
             </div>
