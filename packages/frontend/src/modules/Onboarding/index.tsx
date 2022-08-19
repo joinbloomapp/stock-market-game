@@ -160,7 +160,7 @@ export default function Onboarding() {
     if (isSignup && e.target.name === 'password') {
       // When signing up, validate the password
       if (!StringUtils.isValidPassword(e.target.value)) {
-        setError('Password too weak');
+        setError('Password must contain at least one letter and one number');
       }
     }
     setFormValues((prevState) => ({ ...prevState, [name]: value }));

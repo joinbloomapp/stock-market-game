@@ -52,7 +52,7 @@ export default function ResetPassword() {
                   setSuccess(false);
                   // Validate the password
                   if (!StringUtils.isValidPassword(e.target.value)) {
-                    setError('Password too weak');
+                    setError('Password must contain at least one letter and one number');
                   }
                   setNewPassword(e.target.value);
                 }}

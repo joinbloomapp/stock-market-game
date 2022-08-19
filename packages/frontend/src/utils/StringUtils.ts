@@ -66,7 +66,7 @@ namespace StringUtils {
    * @returns true or false
    */
   export function isValidPassword(password: string): boolean {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/;
     return regex.test(password);
   }
 }
