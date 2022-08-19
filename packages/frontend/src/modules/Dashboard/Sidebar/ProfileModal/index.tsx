@@ -53,7 +53,7 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
     if (e.target.name === 'newPassword') {
       // Validate the new password
       if (!StringUtils.isValidPassword(e.target.value)) {
-        setError('New password too weak');
+        setError('New password must contain at least one letter and one number');
       }
     }
     setFormValues((prevState) => ({ ...prevState, [name]: value }));
