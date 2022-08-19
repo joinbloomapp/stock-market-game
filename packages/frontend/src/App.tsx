@@ -11,7 +11,9 @@ import updateLocale from 'dayjs/plugin/updateLocale';
 import utc from 'dayjs/plugin/utc';
 import { createContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import ChatwootWidget from './common/ChatwootWidget';
 import LoadingScreen from './common/LoadingScreen';
 import PrivateRoute from './common/PrivateRoute';
 import useMobile from './hooks/useMobile';
@@ -24,7 +26,6 @@ import PasswordReset from './modules/PasswordReset';
 import UserService from './services/User';
 import { User } from './services/User/types';
 import Analytics from './system/Analytics';
-import 'react-toastify/dist/ReactToastify.css';
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -108,14 +109,17 @@ function App() {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <Router>
-        <Routes>
-          {renderRoutes()}
-          <Route path="*" element={<Navigate to={isMobile ? '/mobile' : '/404'} replace />} />
-        </Routes>
-      </Router>
-    </UserContext.Provider>
+    <>
+      <ChatwootWidget />
+      <UserContext.Provider value={{ user, setUser }}>
+        <Router>
+          <Routes>
+            {renderRoutes()}
+            <Route path="*" element={<Navigate to={isMobile ? '/mobile' : '/404'} replace />} />
+          </Routes>
+        </Router>
+      </UserContext.Provider>
+    </>
   );
 }
 
