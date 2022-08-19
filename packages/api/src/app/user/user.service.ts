@@ -73,7 +73,7 @@ export class UserService {
   async getCurrentUserInfo(req: Request): Promise<FullUserInfoDto> {
     return new FullUserInfoDto(
       await this.userRepository.findOne(req.user.id, {
-        select: ["id", "name", "firstName", "lastName", "email"],
+        select: ["id", "name", "firstName", "lastName", "email", "isSiteAdmin"],
       })
     );
   }

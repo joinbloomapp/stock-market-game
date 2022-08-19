@@ -5,8 +5,9 @@
 
 // @ts-nocheck
 
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { UserContext } from '../../App';
 import LoadingScreen from '../../common/LoadingScreen';
 import GameService from '../../services/Game';
 import { Game } from '../../services/Game/types';
@@ -17,16 +18,21 @@ import Leaderboard from './Leaderboard';
 import OrderHistory from './OrderHistory';
 import Portfolio from './Portfolio';
 import Sidebar from './Sidebar';
+import SiteAdminHeader from './SiteAdminHeader';
 
 interface IDashboardContext {
   game?: Partial<Game> | undefined;
   setGame: React.Dispatch<React.SetStateAction<Partial<Game> | undefined>>;
+  viewingOtherUser: boolean;
+  setViewingOtherUser: (value: boolean) => void;
   loading: boolean;
 }
 
 export const DashboardContext = createContext<IDashboardContext>({
   game: undefined,
   setGame: () => {},
+  viewingOtherUser: false,
+  setViewingOtherUser: () => {},
   loading: false,
 });
 
@@ -35,7 +41,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const empty = useMatch('/dashboard/g/:inviteCode');
   const [game, setGame] = useState<Game>();
+  const [viewingOtherUser, setViewingOtherUser] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
 
   const fetchGame = async () => {
     setLoading(true);
@@ -67,6 +75,7 @@ export default function Dashboard() {
     if (!game) {
       fetchGame();
     }
+    setViewingOtherUser(!!localStorage.getItem('userAuthToken'));
   }, []);
 
   if (!game) {
@@ -82,7 +91,10 @@ export default function Dashboard() {
   }
 
   return (
-    <DashboardContext.Provider value={{ game, setGame, loading }}>
+    <DashboardContext.Provider
+      value={{ game, setGame, viewingOtherUser, setViewingOtherUser, loading }}
+    >
+      {viewingOtherUser && <SiteAdminHeader />}
       <div className="flex h-full min-h-screen text-t-1 z-10 bg-purple-polka bg-fixed bg-center bg-repeat">
         <div className="w-[340px] hidden md:block">
           <Sidebar />

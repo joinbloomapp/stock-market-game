@@ -16,7 +16,9 @@ client.interceptors.request.use(async (config) => {
     ...config,
     headers: {
       ...config.headers,
-      Authorization: `Bearer ${localStorage.getItem('authToken') || ''}`,
+      Authorization: `Bearer ${
+        localStorage.getItem('userAuthToken') || localStorage.getItem('authToken') || ''
+      }`,
     },
   };
 });
@@ -27,8 +29,13 @@ client.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
-      // If JWT is expired or invalid for some reason, just remove it and send them back to login page
-      localStorage.removeItem('authToken');
+      if (localStorage.getItem('userAuthToken')) {
+        // If user JWT is expired or invalid for some reason, just remove it and send admin back to their own dashboard
+        localStorage.removeItem('userAuthToken');
+      } else {
+        // If JWT is expired or invalid for some reason, just remove it and send them back to login page
+        localStorage.removeItem('authToken');
+      }
       location.reload();
     }
     return Promise.reject(error);
