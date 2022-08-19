@@ -9,6 +9,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  isSiteAdmin?: boolean;
 }
 
 export interface UpdateUser {

@@ -16,7 +16,9 @@ client.interceptors.request.use(async (config) => {
     ...config,
     headers: {
       ...config.headers,
-      Authorization: `Bearer ${localStorage.getItem('authToken') || ''}`,
+      Authorization: `Bearer ${
+        localStorage.getItem('userAuthToken') || localStorage.getItem('authToken') || ''
+      }`,
     },
   };
 });

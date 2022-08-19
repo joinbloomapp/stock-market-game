@@ -29,6 +29,7 @@ import { ProfileEvents } from '../../../system/Analytics/events/ProfileEvents';
 import DateTimeUtils from '../../../utils/DateTimeUtils';
 import GamesModal from './GamesModal';
 import ProfileModal from './ProfileModal';
+import SiteAdminModal from './SiteAdminModal';
 
 interface SidebarItem {
   title: string;
@@ -43,6 +44,7 @@ export default function Sidebar() {
   const [active, setActive] = useState(0);
   const [openGamesModal, setOpenGamesModal] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
+  const [openSiteAdminModal, setOpenSiteAdminModal] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   const topItems: SidebarItem[] = [
@@ -84,6 +86,16 @@ export default function Sidebar() {
       setOpenProfileModal(true);
     },
   });
+
+  if (!user?.isSiteAdmin) {
+    topItems.push({
+      title: 'Support panel',
+      icon: <Icon28Profile />,
+      onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
+        setOpenSiteAdminModal(true);
+      },
+    });
+  }
 
   topItems.push({
     title: 'Log out',
@@ -170,7 +182,7 @@ export default function Sidebar() {
                   if (item.onClick) {
                     item.onClick(e);
                   }
-                  if (item.title !== 'My profile') {
+                  if (!['My profile', 'Support panel'].includes(item.title)) {
                     setActive(i);
                   }
                 }}
@@ -199,6 +211,9 @@ export default function Sidebar() {
       {/* <div className=" bg-b-3 w-[280px] rounded-2xl pb-2 min-h-[100px]"></div> */}
       <GamesModal open={openGamesModal} setOpen={setOpenGamesModal} />
       <ProfileModal open={openProfileModal} setOpen={setOpenProfileModal} />
+      {!user?.isSiteAdmin && (
+        <SiteAdminModal open={openSiteAdminModal} setOpen={setOpenSiteAdminModal} />
+      )}
     </div>
   );
 }
