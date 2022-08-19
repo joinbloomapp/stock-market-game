@@ -159,7 +159,9 @@ export default function Onboarding() {
     setError('');
     if (isSignup && e.target.name === 'password') {
       // When signing up, validate the password
-      if (!StringUtils.isValidPassword(e.target.value)) {
+      if (e.target.value.length < 8) {
+        setError('Password must be at least 8 characters');
+      } else if (!StringUtils.isValidPassword(e.target.value)) {
         setError('Password must contain at least one letter and one number');
       }
     }
