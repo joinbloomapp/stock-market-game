@@ -17,7 +17,7 @@ export default function SiteAdminHeader() {
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4 w-full h-12 text-t-1 bg-b-2 nav-box-shadow">
+    <div className="fixed top-0 flex items-center justify-center space-x-4 w-full h-12 text-t-1 bg-b-2 z-30">
       <p>You are currently viewing {user?.name || ''}'s dashboard</p>
       <Button type={ButtonType.Link} onClick={logoutOfUser}>
         Log out of user
