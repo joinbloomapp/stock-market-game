@@ -55,7 +55,13 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
       if (e.target.value.length < 8) {
         setError('New password must be at least 8 characters');
       } else if (!StringUtils.isValidPassword(e.target.value)) {
-        setError('New password must contain at least one letter and one number');
+        const hasLetter = StringUtils.containsLetter(e.target.value);
+        const hasNumber = StringUtils.containsNumber(e.target.value);
+        setError(
+          `New password must contain at least ${!hasLetter ? 'one letter' : ''}${
+            !hasLetter && !hasNumber ? ' and ' : ''
+          }${!hasNumber ? 'one number' : ''}`
+        );
       }
     }
     setFormValues((prevState) => ({ ...prevState, [name]: value }));

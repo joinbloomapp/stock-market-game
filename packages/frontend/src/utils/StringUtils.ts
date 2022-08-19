@@ -69,6 +69,26 @@ namespace StringUtils {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/;
     return regex.test(password);
   }
+
+  /**
+   * Checks if a stirng contains at least one alphabetic character
+   *
+   * @param s string to check
+   * @returns true or false
+   */
+  export function containsLetter(s: string) {
+    return /[a-zA-Z]/.test(s);
+  }
+
+  /**
+   * Checks if a string contains at least one numerical digit
+   *
+   * @param s string to check
+   * @returns true or false
+   */
+  export function containsNumber(s: string) {
+    return /[0-9]/.test(s);
+  }
 }
 
 export default StringUtils;
