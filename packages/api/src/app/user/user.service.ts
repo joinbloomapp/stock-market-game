@@ -43,19 +43,19 @@ export class UserService {
       }
     }
 
-    const names = user.name.split(" ");
+    let name = user.name;
 
-    if (data.firstName) {
-      names[0] = data.firstName;
-    }
-
-    if (data.lastName) {
-      names[1] = data.lastName;
+    if (data.firstName && data.lastName) {
+      name = `${data.firstName} ${data.lastName}`;
+    } else if (data.firstName) {
+      name = `${data.firstName} ${user.lastName}`;
+    } else if (data.lastName) {
+      name = `${user.firstName} ${data.lastName}`;
     }
 
     await this.userRepository.update(req.user.id, {
       ...data,
-      name: names.join(" "),
+      name,
     });
   }
 

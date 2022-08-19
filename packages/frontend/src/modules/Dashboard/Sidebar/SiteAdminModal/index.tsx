@@ -47,11 +47,22 @@ export default function SiteAdminModal({ open, setOpen }: ISiteAdminModalProps) 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await AdminService.loginAs(email);
-    const curUser = await UserService.getUser();
-    navigate('/');
-    setUser(curUser);
-    setViewingOtherUser(true);
+    let ok;
+
+    try {
+      await AdminService.loginAs(email);
+      ok = true;
+    } catch (err) {
+      setError('Email does not exist');
+    }
+
+    if (ok) {
+      const curUser = await UserService.getUser();
+      navigate('/');
+      setUser(curUser);
+      setViewingOtherUser(true);
+    }
+
     setLoading(false);
   };
 
