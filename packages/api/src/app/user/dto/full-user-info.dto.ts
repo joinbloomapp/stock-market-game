@@ -12,6 +12,7 @@ export class FullUserInfoDto {
   lastName: string;
   email: string;
   hasPassword: boolean;
+  isSiteAdmin?: boolean;
 
   constructor(user: UserEntity) {
     this.id = user.id;
@@ -20,5 +21,8 @@ export class FullUserInfoDto {
     this.lastName = user.lastName;
     this.email = user.email;
     this.hasPassword = user.extra?.hasPassword;
+    if (user.isSiteAdmin) {
+      this.isSiteAdmin = true;
+    }
   }
 }

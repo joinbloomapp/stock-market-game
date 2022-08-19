@@ -50,6 +50,9 @@ export class User {
   })
   createdAt: Date;
 
+  @Column({ type: "boolean", default: false })
+  isSiteAdmin: boolean;
+
   @Column({ type: "jsonb", default: {} })
   extra: UserExtraData;
 
