@@ -1,8 +1,11 @@
-/* eslint-disable */
-
-import { useEffect } from 'react';
+/*
+ * Copyright (c) 2022 Contour Labs, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 
 // @ts-nocheck
+
+import { useEffect } from 'react';
 
 export default function ChatwootWidget() {
   useEffect(() => {
