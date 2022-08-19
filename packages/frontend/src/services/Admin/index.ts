@@ -6,8 +6,8 @@
 import client from '..';
 
 namespace AdminService {
-  export async function loginToUserDashboard(email: string): Promise<void> {
-    const res = await client.post('/admin/login', { email });
+  export async function loginAs(email: string): Promise<void> {
+    const res = await client.post('/admin/login-as', { email });
     localStorage.setItem('userAuthToken', res?.data?.access);
   }
 }

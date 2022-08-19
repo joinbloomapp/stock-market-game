@@ -6,6 +6,7 @@
 import { Dialog } from '@headlessui/react';
 import { Icon24Cancel } from '@vkontakte/icons';
 import React, { useContext, useEffect, useState } from 'react';
+import { DashboardContext } from '../..';
 import { UserContext } from '../../../../App';
 import Button, { ButtonType } from '../../../../components/Button';
 import Input, { InputHeight, InputStyle } from '../../../../components/Input';
@@ -19,6 +20,7 @@ export interface IProfileModalProps extends IModalProps {}
 
 export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
   const { user, setUser } = useContext(UserContext);
+  const { viewingOtherUser } = useContext(DashboardContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -214,15 +216,28 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
             </div>
           </div>
           <div className="absolute flex space-x-3 w-full bottom-10 left-0 right-0 mr-auto ml-auto px-8">
-            <Button
-              shadow
-              type={ButtonType.Secondary}
-              className="w-full h-14"
-              buttonType="button"
-              onClick={switchView}
-            >
-              {showPasswordReset ? 'Edit profile' : 'Change password'}
-            </Button>
+            {!viewingOtherUser ? (
+              <Button
+                shadow
+                type={ButtonType.Secondary}
+                className="w-full h-14"
+                buttonType="button"
+                onClick={switchView}
+              >
+                {showPasswordReset ? 'Edit profile' : 'Change password'}
+              </Button>
+            ) : (
+              <Button
+                shadow
+                loading={loading}
+                type={ButtonType.Secondary}
+                className="w-full h-14"
+                buttonType="button"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+            )}
             <Button
               shadow
               loading={loading}

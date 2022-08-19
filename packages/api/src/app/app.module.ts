@@ -1,3 +1,4 @@
+import { AdminModule } from "./admin/admin.module";
 /*
  * Copyright (c) 2022 Contour Labs, Inc.
  * SPDX-License-Identifier: AGPL-3.0-only
@@ -40,6 +41,7 @@ export const allAppModules = [
   NewsModule,
   CategoriesModule,
   OrdersModule,
+  AdminModule,
 ];
 
 @Module({
@@ -97,6 +99,12 @@ export const allAppModules = [
       {
         path: "categories",
         module: CategoriesModule,
+      },
+    ]),
+    RouterModule.register([
+      {
+        path: "admin",
+        module: AdminModule,
       },
     ]),
   ],

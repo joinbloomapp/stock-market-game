@@ -15,13 +15,14 @@ import {
 import cls from 'classnames';
 import dayjs from 'dayjs';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { DashboardContext } from '..';
 import { UserContext } from '../../../App';
 import Logo from '../../../assets/images/bloom.png';
 import Button, { ButtonType } from '../../../components/Button';
 import Loader from '../../../components/Loader';
 import { GameStatus } from '../../../services/Game/types';
+import UserService from '../../../services/User';
 import Analytics from '../../../system/Analytics';
 import { GameEvents } from '../../../system/Analytics/events/GameEvents';
 import { OnboardingEvents } from '../../../system/Analytics/events/OnboardingEvents';
@@ -39,7 +40,8 @@ interface SidebarItem {
 }
 
 export default function Sidebar() {
-  const { game, loading } = useContext(DashboardContext);
+  const navigate = useNavigate();
+  const { game, loading, viewingOtherUser } = useContext(DashboardContext);
   const location = useLocation();
   const [active, setActive] = useState(0);
   const [openGamesModal, setOpenGamesModal] = useState(false);
@@ -87,7 +89,7 @@ export default function Sidebar() {
     },
   });
 
-  if (!user?.isSiteAdmin) {
+  if (user?.isSiteAdmin) {
     topItems.push({
       title: 'Support panel',
       icon: <Icon28Profile />,
@@ -101,10 +103,18 @@ export default function Sidebar() {
     title: 'Log out',
     icon: <Icon28DoorArrowRightOutline className="text-u-negative" />,
     to: '/login',
-    onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
-      localStorage.removeItem('authToken');
-      Analytics.track(OnboardingEvents.CLICKED_LOGOUT);
-      setUser(undefined);
+    onClick: async (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (viewingOtherUser) {
+        // Log out of other user's dashboard and return admin back to their own dashboard
+        localStorage.removeItem('userAuthToken');
+        const curUser = await UserService.getUser();
+        navigate('/');
+        setUser(curUser);
+      } else {
+        localStorage.removeItem('authToken');
+        Analytics.track(OnboardingEvents.CLICKED_LOGOUT);
+        setUser(undefined);
+      }
     },
   });
 
@@ -133,7 +143,12 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="fixed text-t-1 z-20 space-y-2 top-0 bottom-0 w-[280px]">
+    <div
+      className={cls('fixed text-t-1 z-20 space-y-2 bottom-0 w-[280px]', {
+        'top-12': viewingOtherUser,
+        'top-0': !viewingOtherUser,
+      })}
+    >
       <div className=" bg-b-3 h-full overflow-y-auto">
         <div className="px-5">
           <Link to="portfolio">
@@ -211,7 +226,7 @@ export default function Sidebar() {
       {/* <div className=" bg-b-3 w-[280px] rounded-2xl pb-2 min-h-[100px]"></div> */}
       <GamesModal open={openGamesModal} setOpen={setOpenGamesModal} />
       <ProfileModal open={openProfileModal} setOpen={setOpenProfileModal} />
-      {!user?.isSiteAdmin && (
+      {user?.isSiteAdmin && (
         <SiteAdminModal open={openSiteAdminModal} setOpen={setOpenSiteAdminModal} />
       )}
     </div>

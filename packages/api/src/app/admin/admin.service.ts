@@ -3,15 +3,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { ForbiddenException, Injectable } from "@nestjs/common";
 import { UserEntity } from "@bloom-smg/postgresql";
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Request } from "express";
 import { Repository } from "typeorm";
 import { AuthService } from "../auth/auth.service";
-import { Request } from "express";
 
 @Injectable()
 export class AdminService {
   constructor(
+    @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly authService: AuthService
   ) {}

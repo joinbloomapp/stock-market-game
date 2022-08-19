@@ -6,18 +6,21 @@
 import { Dialog } from '@headlessui/react';
 import { Icon24Cancel } from '@vkontakte/icons';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { DashboardContext } from '../..';
 import { UserContext } from '../../../../App';
 import Button, { ButtonType } from '../../../../components/Button';
 import Input, { InputHeight, InputStyle } from '../../../../components/Input';
 import Modal, { IModalProps } from '../../../../components/Modal';
 import AdminService from '../../../../services/Admin';
 import UserService from '../../../../services/User';
-import client from '../../../../services';
 
 export interface ISiteAdminModalProps extends IModalProps {}
 
 export default function SiteAdminModal({ open, setOpen }: ISiteAdminModalProps) {
+  const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
+  const { setViewingOtherUser } = useContext(DashboardContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -38,15 +41,17 @@ export default function SiteAdminModal({ open, setOpen }: ISiteAdminModalProps) 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError('');
     setSuccess('');
-    setEmail('');
+    setEmail(e.target.value);
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await AdminService.loginToUserDashboard(email);
+    await AdminService.loginAs(email);
     const curUser = await UserService.getUser();
+    navigate('/');
     setUser(curUser);
+    setViewingOtherUser(true);
     setLoading(false);
   };
 
@@ -97,7 +102,7 @@ export default function SiteAdminModal({ open, setOpen }: ISiteAdminModalProps) 
             >
               Cancel
             </Button>
-            <Button shadow type={ButtonType.Primary} className="w-full h-14" buttonType="button">
+            <Button shadow type={ButtonType.Primary} className="w-full h-14" buttonType="submit">
               Login into account
             </Button>
           </div>
