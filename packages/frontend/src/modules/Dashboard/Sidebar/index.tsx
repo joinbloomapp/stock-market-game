@@ -218,7 +218,7 @@ export default function Sidebar() {
                   <p className="pl-5">{item.title}</p>
                 </li>
               </Link>
-              {i === topItems.length - (viewingOtherUser ? 4 : 3) && <hr />}
+              {i === topItems.length - (user?.isSiteAdmin ? 4 : 3) && <hr />}
             </React.Fragment>
           ))}
         </ul>
