@@ -75,7 +75,7 @@ export default function Dashboard() {
     if (!game) {
       fetchGame();
     }
-    setViewingOtherUser(localStorage.getItem('userAuthToken'));
+    setViewingOtherUser(!!localStorage.getItem('userAuthToken'));
   }, []);
 
   if (!game) {
