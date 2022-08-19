@@ -43,7 +43,20 @@ export class UserService {
       }
     }
 
-    await this.userRepository.update(req.user.id, data);
+    const names = user.name.split(" ");
+
+    if (data.firstName) {
+      names[0] = data.firstName;
+    }
+
+    if (data.lastName) {
+      names[1] = data.lastName;
+    }
+
+    await this.userRepository.update(req.user.id, {
+      ...data,
+      name: names.join(" "),
+    });
   }
 
   async resetPassword(req: Request, oldPassword: string, newPassword: string) {

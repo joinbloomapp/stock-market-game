@@ -146,7 +146,7 @@ export default function LeaderboardTable({
                       #{p.rank}
                     </div>
                     <p className="font-medium">
-                      {p.name}
+                      {p.userId === user?.id ? user.name : p.name}
                       {p.userId === user?.id ? ' (you)' : ''}
                       {p.isGameAdmin && <span className="ml-2">&#128081;</span>}
                     </p>
