@@ -158,6 +158,7 @@ jobs:
         env:
           VITE_APP_URL: ${{ steps.config.outputs.VITE_APP_URL }}
           VITE_BASE_API_URL: ${{ steps.config.outputs.VITE_BASE_API_URL }}
+          VITE_CHATWOOT_TOKEN: ${{ secrets.VITE_CHATWOOT_TOKEN }}
         run: yarn run build
 
       # https://gist.github.com/bradwestfall/b5b0e450015dbc9b4e56e5f398df48ff
