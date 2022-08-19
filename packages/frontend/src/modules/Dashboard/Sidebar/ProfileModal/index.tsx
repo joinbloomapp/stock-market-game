@@ -52,7 +52,9 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
     setSuccess('');
     if (e.target.name === 'newPassword') {
       // Validate the new password
-      if (!StringUtils.isValidPassword(e.target.value)) {
+      if (e.target.value.length < 8) {
+        setError('New password must be at least 8 characters');
+      } else if (!StringUtils.isValidPassword(e.target.value)) {
         setError('New password must contain at least one letter and one number');
       }
     }
