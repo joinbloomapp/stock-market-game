@@ -7,13 +7,13 @@ import { Dialog } from '@headlessui/react';
 import { Icon24Cancel } from '@vkontakte/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DashboardContext } from '../..';
-import { UserContext } from '../../../../App';
-import Button, { ButtonType } from '../../../../components/Button';
-import Input, { InputHeight, InputStyle } from '../../../../components/Input';
-import Modal, { IModalProps } from '../../../../components/Modal';
-import AdminService from '../../../../services/Admin';
-import UserService from '../../../../services/User';
+import { DashboardContext } from '../../..';
+import { UserContext } from '../../../../../App';
+import Button, { ButtonType } from '../../../../../components/Button';
+import Input, { InputHeight, InputStyle } from '../../../../../components/Input';
+import Modal, { IModalProps } from '../../../../../components/Modal';
+import AdminService from '../../../../../services/Admin';
+import UserService from '../../../../../services/User';
 
 export interface ISiteAdminModalProps extends IModalProps {}
 

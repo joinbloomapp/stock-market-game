@@ -3,82 +3,42 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import {
-  Icon24ClockOutline,
-  Icon24CupOutline,
-  Icon24SearchOutline,
-  Icon28DoorArrowRightOutline,
-  Icon28Profile,
-  Icon28SettingsOutline,
-  Icon28StatisticsOutline,
-} from '@vkontakte/icons';
+import { Icon28DoorArrowRightOutline, Icon28Profile } from '@vkontakte/icons';
 import cls from 'classnames';
 import dayjs from 'dayjs';
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { DashboardContext } from '..';
-import { UserContext } from '../../../App';
-import Logo from '../../../assets/images/bloom.png';
-import Button, { ButtonType } from '../../../components/Button';
-import Loader from '../../../components/Loader';
-import { GameStatus } from '../../../services/Game/types';
-import UserService from '../../../services/User';
-import Analytics from '../../../system/Analytics';
-import { GameEvents } from '../../../system/Analytics/events/GameEvents';
-import { OnboardingEvents } from '../../../system/Analytics/events/OnboardingEvents';
-import { ProfileEvents } from '../../../system/Analytics/events/ProfileEvents';
-import DateTimeUtils from '../../../utils/DateTimeUtils';
-import GamesModal from './GamesModal';
-import ProfileModal from './ProfileModal';
+import { twMerge } from 'tailwind-merge';
+import { DashboardContext } from '../..';
+import { UserContext } from '../../../../App';
+import Logo from '../../../../assets/images/bloom.png';
+import Button, { ButtonType } from '../../../../components/Button';
+import Loader from '../../../../components/Loader';
+import useDashboardNavigate from '../../../../hooks/useDashboardNavigate';
+import { GameStatus } from '../../../../services/Game/types';
+import UserService from '../../../../services/User';
+import Analytics from '../../../../system/Analytics';
+import { GameEvents } from '../../../../system/Analytics/events/GameEvents';
+import { OnboardingEvents } from '../../../../system/Analytics/events/OnboardingEvents';
+import { ProfileEvents } from '../../../../system/Analytics/events/ProfileEvents';
+import DateTimeUtils from '../../../../utils/DateTimeUtils';
+import GamesModal from '../../../../common/GamesModal';
+import ProfileModal from '../../../../common/ProfileModal';
 import SiteAdminModal from './SiteAdminModal';
 
-interface SidebarItem {
-  title: string;
-  icon: ReactNode;
-  to?: string;
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+export interface ISidebarProps {
+  className?: string;
 }
 
-export default function Sidebar() {
+export default function Sidebar({ className }: ISidebarProps) {
   const navigate = useNavigate();
   const { game, loading, viewingOtherUser } = useContext(DashboardContext);
   const location = useLocation();
-  const [active, setActive] = useState(0);
+  const [active, setActive, topItems] = useDashboardNavigate();
   const [openGamesModal, setOpenGamesModal] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
   const [openSiteAdminModal, setOpenSiteAdminModal] = useState(false);
   const { user, setUser } = useContext(UserContext);
-
-  const topItems: SidebarItem[] = [
-    {
-      title: 'My portfolio',
-      icon: <Icon28StatisticsOutline />,
-      to: 'portfolio',
-    },
-    {
-      title: 'Leaderboard',
-      icon: <Icon24CupOutline />,
-      to: 'leaderboard',
-    },
-    {
-      title: 'Browse stocks',
-      icon: <Icon24SearchOutline />,
-      to: 'browse',
-    },
-    {
-      title: 'Order history',
-      icon: <Icon24ClockOutline />,
-      to: 'history',
-    },
-  ];
-
-  if (game?.isGameAdmin) {
-    topItems.push({
-      title: 'Game settings',
-      icon: <Icon28SettingsOutline />,
-      to: `settings`,
-    });
-  }
 
   topItems.push({
     title: 'My profile',
@@ -144,10 +104,13 @@ export default function Sidebar() {
 
   return (
     <div
-      className={cls('fixed text-t-1 z-20 space-y-2 bottom-0 w-[280px]', {
-        'top-12': viewingOtherUser,
-        'top-0': !viewingOtherUser,
-      })}
+      className={twMerge(
+        cls('fixed text-t-1 z-20 space-y-2 bottom-0 w-[280px]', {
+          'top-12': viewingOtherUser,
+          'top-0': !viewingOtherUser,
+        }),
+        className
+      )}
     >
       <div className=" bg-b-3 h-full overflow-y-auto">
         <div className="px-5">

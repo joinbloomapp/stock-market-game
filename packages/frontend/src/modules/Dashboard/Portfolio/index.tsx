@@ -320,80 +320,85 @@ export default function Portfolio() {
     ];
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 my-4 pt-5">
-        <div className="flex justify-between text-t-1 -mb-12 mx-7">
-          <p>Leaderboard</p>
-          <Button
-            type={ButtonType.Link}
-            className="text-t-1 font-normal z-20"
-            onClick={() => {
-              Analytics.track(PortfolioEvents.CLICKED_LEADERBOARD_SHOW_ALL, {
-                gameId: game?.id,
-                inviteCode: game?.inviteCode,
-              });
-              navigate(`/dashboard/g/${game?.inviteCode}/leaderboard`);
-            }}
-          >
-            Show all
-            <Icon16Chevron className="ml-1 text-i-1" />
-          </Button>
+      <>
+        <div className="md:hidden">
+          <LeaderboardTable players={players} loading={loading} />
         </div>
-        <div className="relative" ref={leaderboardRef as LegacyRef<HTMLDivElement> | undefined}>
-          {players.slice(0, 3).map((p, i) => {
-            return (
-              <React.Fragment key={p.playerId}>
-                <div
-                  ref={playerRefs[i] as LegacyRef<HTMLDivElement> | undefined}
-                  className={cls('flex flex-col absolute', styles[i].container)}
-                >
-                  <p
-                    className={cls(
-                      'text-lg font-bold mb-4 text-ellipsis overflow-hidden whitespace-nowrap',
-                      styles[i].text
-                    )}
-                  >
-                    {p.name}
-                  </p>
+        <div className="rounded-2xl bg-b-2 text-t-1 my-4 pt-5 hidden md:block">
+          <div className="flex justify-between text-t-1 -mb-12 mx-7">
+            <p>Leaderboard</p>
+            <Button
+              type={ButtonType.Link}
+              className="text-t-1 font-normal z-20"
+              onClick={() => {
+                Analytics.track(PortfolioEvents.CLICKED_LEADERBOARD_SHOW_ALL, {
+                  gameId: game?.id,
+                  inviteCode: game?.inviteCode,
+                });
+                navigate(`/dashboard/g/${game?.inviteCode}/leaderboard`);
+              }}
+            >
+              Show all
+              <Icon16Chevron className="ml-1 text-i-1" />
+            </Button>
+          </div>
+          <div className="relative" ref={leaderboardRef as LegacyRef<HTMLDivElement> | undefined}>
+            {players.slice(0, 3).map((p, i) => {
+              return (
+                <React.Fragment key={p.playerId}>
                   <div
-                    key={p.playerId}
-                    className={cls(
-                      'flex items-center justify-center bg-a-1 text-t-1 py-1 px-2 pink-shadow-small rounded-lg font-medium text-ellipsis overflow-hidden whitespace-nowrap',
-                      styles[i].dollar
-                    )}
+                    ref={playerRefs[i] as LegacyRef<HTMLDivElement> | undefined}
+                    className={cls('flex flex-col absolute', styles[i].container)}
                   >
-                    {StringUtils.USD(p.totalValue)}
+                    <p
+                      className={cls(
+                        'text-lg font-bold mb-4 text-ellipsis overflow-hidden whitespace-nowrap',
+                        styles[i].text
+                      )}
+                    >
+                      {p.name}
+                    </p>
+                    <div
+                      key={p.playerId}
+                      className={cls(
+                        'flex items-center justify-center bg-a-1 text-t-1 py-1 px-2 pink-shadow-small rounded-lg font-medium text-ellipsis overflow-hidden whitespace-nowrap',
+                        styles[i].dollar
+                      )}
+                    >
+                      {StringUtils.USD(p.totalValue)}
+                    </div>
                   </div>
-                </div>
-              </React.Fragment>
-            );
-          })}
-          <img
-            src={LeaderboardImage}
-            alt="leaderboard graphic"
-            width="600"
-            height="330"
-            className="mx-auto"
-          />
-        </div>
-        <div className="flex items-center space-x-4 bg-b-3 bottom-0 w-full h-20 rounded-b-2xl px-7">
-          <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
-            #{player?.rank}
+                </React.Fragment>
+              );
+            })}
+            <img
+              src={LeaderboardImage}
+              alt="leaderboard graphic"
+              width="600"
+              height="330"
+              className="mx-auto"
+            />
           </div>
-          <div className="flex flex-row justify-between items-center w-full text-right">
-            <div>
-              <p>
-                {user?.name} (you) {game?.isGameAdmin && <span className="ml-2">&#128081;</span>}
-              </p>
+          <div className="flex items-center space-x-4 bg-b-3 bottom-0 w-full h-20 rounded-b-2xl px-7">
+            <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
+              #{player?.rank}
             </div>
-            <div>
-              <div className={cls(StyleUtils.getChangeStyle(player?.totalChangePercent || 0))}>
-                {StringUtils.signNumber((player?.totalChangePercent || 0) / 100, 'percent')}
+            <div className="flex flex-row justify-between items-center w-full text-right">
+              <div>
+                <p>
+                  {user?.name} (you) {game?.isGameAdmin && <span className="ml-2">&#128081;</span>}
+                </p>
               </div>
-              <p className="text-sm text-t-2">{StringUtils.USD(player?.totalValue as number)}</p>
+              <div>
+                <div className={cls(StyleUtils.getChangeStyle(player?.totalChangePercent || 0))}>
+                  {StringUtils.signNumber((player?.totalChangePercent || 0) / 100, 'percent')}
+                </div>
+                <p className="text-sm text-t-2">{StringUtils.USD(player?.totalValue as number)}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   };
 

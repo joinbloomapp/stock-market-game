@@ -5,7 +5,6 @@
 
 // @ts-nocheck
 
-import cls from 'classnames';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
@@ -16,9 +15,10 @@ import Browse from './Browse';
 import GameSettings from './GameSettings';
 import IndividualStock from './IndividualStock';
 import Leaderboard from './Leaderboard';
+import MobileDashboardHeader from './MobileDashboardHeader';
+import Navigation from './Navigation';
 import OrderHistory from './OrderHistory';
 import Portfolio from './Portfolio';
-import Sidebar from './Sidebar';
 import SiteAdminHeader from './SiteAdminHeader';
 
 interface IDashboardContext {
@@ -97,10 +97,11 @@ export default function Dashboard() {
     >
       {viewingOtherUser && <SiteAdminHeader />}
       <div className="flex h-full min-h-screen text-t-1 z-10 bg-purple-polka bg-fixed bg-center bg-repeat">
-        <div className="w-[340px] hidden md:block">
-          <Sidebar />
+        <div className="block md:hidden">
+          <MobileDashboardHeader />
         </div>
-        <div className="z-10 w-full flex justify-center pb-24 pt-10 md:pb-10 px-4 md:px-0">
+        <Navigation />
+        <div className="z-10 w-full flex justify-center pb-24 pt-20 md:pt-10 md:pb-10 px-4 md:px-0">
           <div className="w-full md:w-[65%] max-w-3xl">
             <Routes>
               <Route path="/portfolio" element={<Portfolio />} />
