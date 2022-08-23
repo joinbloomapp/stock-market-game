@@ -331,10 +331,27 @@ export class GameService {
     }
 
     const updated = {};
-    const properties = ["endAt", "name", "defaultBuyingPower"];
+    const properties = ["endAt", "name", "defaultBuyingPower", "inviteCode"];
     for (const x of properties) {
-      if (data[x]) {
-        updated[x] = data[x];
+      let d = data[x];
+      if (d) {
+        if (x === "inviteCode") {
+          if (
+            (
+              await this.gameRepository.find({
+                where: { inviteCode: d },
+                select: ["id"],
+              })
+            ).length
+          ) {
+            throw new BadRequestException("Invite code already in use");
+          }
+          d = d.toString();
+          if (d.length !== 6) {
+            throw new BadRequestException("Invite code must be 6 characters");
+          }
+        }
+        updated[x] = d;
       }
     }
     await this.gameRepository.update({ id: gameId }, updated);
