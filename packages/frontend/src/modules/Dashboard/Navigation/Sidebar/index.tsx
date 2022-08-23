@@ -12,6 +12,8 @@ import { twMerge } from 'tailwind-merge';
 import { DashboardContext } from '../..';
 import { UserContext } from '../../../../App';
 import Logo from '../../../../assets/images/bloom.png';
+import GamesModal from '../../../../common/GamesModal';
+import ProfileModal from '../../../../common/ProfileModal';
 import Button, { ButtonType } from '../../../../components/Button';
 import Loader from '../../../../components/Loader';
 import useDashboardNavigate from '../../../../hooks/useDashboardNavigate';
@@ -22,8 +24,6 @@ import { GameEvents } from '../../../../system/Analytics/events/GameEvents';
 import { OnboardingEvents } from '../../../../system/Analytics/events/OnboardingEvents';
 import { ProfileEvents } from '../../../../system/Analytics/events/ProfileEvents';
 import DateTimeUtils from '../../../../utils/DateTimeUtils';
-import GamesModal from '../../../../common/GamesModal';
-import ProfileModal from '../../../../common/ProfileModal';
 import SiteAdminModal from './SiteAdminModal';
 
 export interface ISidebarProps {

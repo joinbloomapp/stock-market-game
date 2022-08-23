@@ -6,11 +6,11 @@
 import { Dialog } from '@headlessui/react';
 import { Icon24Cancel } from '@vkontakte/icons';
 import React, { useContext, useEffect, useState } from 'react';
-import { DashboardContext } from '../../modules/Dashboard';
 import { UserContext } from '../../App';
 import Button, { ButtonType } from '../../components/Button';
 import Input, { InputHeight, InputStyle } from '../../components/Input';
 import Modal, { IModalProps } from '../../components/Modal';
+import { DashboardContext } from '../../modules/Dashboard';
 import UserService from '../../services/User';
 import Analytics from '../../system/Analytics';
 import { ProfileEvents } from '../../system/Analytics/events/ProfileEvents';

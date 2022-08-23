@@ -383,11 +383,12 @@ export default function Portfolio() {
             <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
               #{player?.rank}
             </div>
-            <div className="flex flex-row justify-between items-center w-full text-right">
+            <div className="flex flex-row justify-between items-center w-full">
               <div>
                 <p>
-                  {user?.name} (you) {game?.isGameAdmin && <span className="ml-2">&#128081;</span>}
+                  {user?.name} (you) {player?.rank === 1 && <span className="ml-2">&#128081;</span>}
                 </p>
+                {player?.isGameAdmin && <p className="text-t-2 text-sm">Game admin</p>}
               </div>
               <div>
                 <div className={cls(StyleUtils.getChangeStyle(player?.totalChangePercent || 0))}>
@@ -416,9 +417,12 @@ export default function Portfolio() {
           <div>
             <h5 className="font-semibold">
               {player?.name}'s portfolio{' '}
-              {player?.isGameAdmin && <span className="ml-2">&#128081;</span>}
+              {player?.rank === 1 && <span className="ml-2">&#128081;</span>}
             </h5>
-            <p className="text-t-2">Joined on {dayjs(player?.createdAt).format('MMM D, YYYY')}</p>
+            <p className="text-t-2">
+              {player?.isGameAdmin ? 'Game admin · ' : ''}Joined on{' '}
+              {dayjs(player?.createdAt).format('MMM D, YYYY')}
+            </p>
           </div>
         </div>
       ) : (
@@ -431,7 +435,7 @@ export default function Portfolio() {
       />
       <StatsBar stats={statsBars} className="mt-4" />
       {!isPlayerPortfolio && game?.status === GameStatus.ACTIVE && positions.length >= 1 && (
-        <div className="-ml-4 px-4 my-4 w-full fixed bottom-0 md:static md:-ml-0 md:px-0 z-30">
+        <div className="-ml-4 px-4 py-4 w-full fixed bottom-20 md:static md:-ml-0 md:px-0 z-40">
           <Button
             shadow
             type={ButtonType.Primary}

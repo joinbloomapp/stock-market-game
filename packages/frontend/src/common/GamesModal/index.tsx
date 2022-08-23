@@ -14,7 +14,6 @@ import Loader from '../../components/Loader';
 import Modal, { IModalProps } from '../../components/Modal';
 import RadioListGroup, { IRadioListItem } from '../../components/RadioListGroup';
 import { DashboardContext } from '../../modules/Dashboard';
-import ProfileModal from '../ProfileModal';
 import GameService from '../../services/Game';
 import { Game, GameStatus } from '../../services/Game/types';
 import UserService from '../../services/User';
@@ -22,6 +21,7 @@ import Analytics from '../../system/Analytics';
 import { GameEvents } from '../../system/Analytics/events/GameEvents';
 import { OnboardingEvents } from '../../system/Analytics/events/OnboardingEvents';
 import { ProfileEvents } from '../../system/Analytics/events/ProfileEvents';
+import ProfileModal from '../ProfileModal';
 
 export interface IGamesModalProps extends IModalProps {}
 

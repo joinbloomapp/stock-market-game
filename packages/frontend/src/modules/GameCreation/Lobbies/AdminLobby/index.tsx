@@ -33,7 +33,7 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
                 >
                   <p className="font-medium">
                     {p.name}
-                    {p.isGameAdmin && <span className="ml-2">&#128081;</span>}
+                    {p.isGameAdmin ? ' (Admin)' : ''}
                   </p>
                   {!p.isGameAdmin && (
                     <Button

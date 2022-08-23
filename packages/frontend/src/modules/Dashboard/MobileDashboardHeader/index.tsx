@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022 Contour Labs, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import Logo from '../../../assets/images/bloom.png';
 import MobileGamesToggle from '../../../common/MobileGamesToggle';
 

@@ -9,7 +9,7 @@ import Sidebar from './Sidebar';
 export default function Navigation() {
   return (
     <div>
-      <div className="w-[340px] hidden md:block">
+      <div className="w-[280px] hidden md:block">
         <Sidebar />
       </div>
       <MobileBottomNavbar className="flex md:hidden" />

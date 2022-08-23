@@ -305,7 +305,7 @@ export default function IndividualStock() {
         </div>
         <IndividualStockGraph ticker={ticker!} setLatestPrice={setLatestPrice} />
         {!loading && game?.status === GameStatus.ACTIVE && (
-          <div className="flex justify-between space-x-4 -ml-4 px-4 my-4 w-full fixed bottom-0 md:static md:-ml-0 md:px-0 z-30">
+          <div className="flex justify-between space-x-4 -ml-4 px-4 py-4 w-full fixed bottom-20 md:static md:-ml-0 md:px-0 z-40 ">
             {position && (
               <Button
                 shadow

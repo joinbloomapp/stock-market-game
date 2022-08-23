@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022 Contour Labs, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { Icon28ChevronDownOutline, Icon28ChevronUpOutline } from '@vkontakte/icons';
 import { useContext, useState } from 'react';
 import Button, { ButtonType } from '../../components/Button';
