@@ -34,7 +34,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="bg-b-2 w-[482px] h-[350px] rounded-xl text-center p-10 absolute-vertical-center">
+    <div className="bg-b-2 w-11/12 md:w-[482px] h-[350px] rounded-xl text-center p-10 absolute-vertical-center">
       <div className="flex flex-col justify-between h-full space-y-10">
         <form onSubmit={onSubmit} className="w-full flex flex-col space-y-4">
           <div className="flex flex-col space-y-4">
