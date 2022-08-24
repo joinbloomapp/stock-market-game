@@ -74,11 +74,6 @@ function App() {
     }
   }, []);
 
-  useLayoutEffect(() => {
-    const bubble = document.querySelector('.woot-widget-bubble');
-    console.log('BUBBLE', bubble);
-  }, []);
-
   if (loading) {
     return <LoadingScreen />;
   }
