@@ -9,6 +9,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DashboardContext } from '..';
 import Input, { InputHeight, InputStyle } from '../../../components/Input';
+import useMobile from '../../../hooks/useMobile';
 import CategoriesService from '../../../services/Categories';
 import { Category } from '../../../services/Categories/types';
 import SearchService from '../../../services/Search';
@@ -22,6 +23,7 @@ import IndividualCategory from './IndividualCategory';
 
 export default function Browse() {
   const navigate = useNavigate();
+  const isMobile = useMobile();
   const { game } = useContext(DashboardContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
@@ -141,7 +143,7 @@ export default function Browse() {
             iconLeft={<Icon24SearchOutline className="mt-5" />}
             value={query}
             onChange={onChange}
-            autoFocus
+            autoFocus={!isMobile}
             placeholder="Search for stocks..."
             required
           />
