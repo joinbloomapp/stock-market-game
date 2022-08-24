@@ -42,9 +42,16 @@ body {
   @apply bg-b-1;
 }
 
+@media (max-width: 768px) {
+  .woot-widget-bubble.woot-elements--right {
+    right: 20px;
+    top: 70px;
+  }
+}
+
 .woot-widget-bubble.woot-elements--right {
+  position: absolute;
   right: 20px;
-  top: 70px;
 }
 
 .pink-shadow {
