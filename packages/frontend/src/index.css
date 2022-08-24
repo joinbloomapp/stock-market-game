@@ -50,7 +50,7 @@ body {
 }
 
 .woot-widget-bubble.woot-elements--right {
-  position: absolute;
+  position: fixed;
   right: 20px;
 }
 
