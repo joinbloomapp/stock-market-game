@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import utc from 'dayjs/plugin/utc';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useLayoutEffect, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -72,6 +72,11 @@ function App() {
     if (!user) {
       fetchUser();
     }
+  }, []);
+
+  useLayoutEffect(() => {
+    const bubble = document.querySelector('.woot-widget-bubble');
+    console.log('BUBBLE', bubble);
   }, []);
 
   if (loading) {

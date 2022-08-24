@@ -294,9 +294,9 @@ export default function IndividualStock() {
         </div>
       )}
       <div>
-        <Link to="#" onClick={() => navigate(-1)} className="md:hidden">
+        <Button type={ButtonType.Link} onClick={() => navigate(-1)} className="md:hidden">
           <Icon28ChevronLeftOutline className="text-t-1 mb-4" />
-        </Link>
+        </Button>
         <div className="flex space-x-4 items-center">
           {!isMobile && (
             <Button

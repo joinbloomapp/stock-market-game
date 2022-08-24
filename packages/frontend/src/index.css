@@ -42,6 +42,11 @@ body {
   @apply bg-b-1;
 }
 
+.woot-widget-bubble.woot-elements--right {
+  right: 20px;
+  top: 70px;
+}
+
 .pink-shadow {
   box-shadow: 0px 6px 0px #942057;
 }

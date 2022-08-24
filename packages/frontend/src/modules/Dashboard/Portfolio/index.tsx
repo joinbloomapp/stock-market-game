@@ -120,9 +120,9 @@ export default function Portfolio() {
     return (
       <div className="rounded-2xl bg-polka bg-center bg-cover text-t-1 my-4 py-10 px-7 flex flex-col items-center justify-center space-y-6">
         {game?.isGameAdmin && !isPlayerPortfolio && (
-          <h3 className="font-semibold">Congrats on hosting the game!</h3>
+          <h3 className="font-semibold text-center">Congrats on hosting the game!</h3>
         )}
-        <h3 className="font-semibold">
+        <h3 className="font-semibold text-center">
           {isPlayerPortfolio ? `${player?.name} finished in` : 'You finished in'}
         </h3>
         <h1
@@ -425,9 +425,9 @@ export default function Portfolio() {
       {isPlayerPortfolio ? (
         <div className="flex flex-wrap justify-between items-center">
           {isMobile && (
-            <Link to="#" onClick={() => navigate(-1)}>
-              <Icon28ChevronLeftOutline className="text-t-1 mb-4 md:hidden" />
-            </Link>
+            <Button type={ButtonType.Link} onClick={() => navigate(-1)} className="md:hidden">
+              <Icon28ChevronLeftOutline className="text-t-1 mb-4" />
+            </Button>
           )}
           <div className="flex flex-wrap space-y-2 space-x-1 md:space-y-0 md:space-x-4 items-center">
             <Button
