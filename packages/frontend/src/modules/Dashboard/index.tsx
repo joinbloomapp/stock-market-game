@@ -15,7 +15,7 @@ import Browse from './Browse';
 import GameSettings from './GameSettings';
 import IndividualStock from './IndividualStock';
 import Leaderboard from './Leaderboard';
-import MobileDashboardHeader from './MobileDashboardHeader';
+import MobileHeader from './MobileHeader';
 import Navigation from './Navigation';
 import OrderHistory from './OrderHistory';
 import Portfolio from './Portfolio';
@@ -98,11 +98,11 @@ export default function Dashboard() {
       {viewingOtherUser && <SiteAdminHeader />}
       <div className="flex h-full min-h-screen text-t-1 z-10 bg-purple-polka bg-fixed bg-center bg-repeat">
         <div className="block md:hidden">
-          <MobileDashboardHeader />
+          <MobileHeader />
         </div>
         <Navigation />
-        <div className="z-10 w-full flex justify-center pb-24 pt-20 md:pt-10 md:pb-10 px-4 md:px-0">
-          <div className="w-full md:w-[65%] max-w-3xl">
+        <div className="z-10 w-full flex justify-center pb-36 pt-20 md:pt-10 md:pb-10 px-4 md:px-0">
+          <div className="w-full sm:w-[80%] md:w-[65%] max-w-3xl">
             <Routes>
               <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/leaderboard" element={<Leaderboard />} />

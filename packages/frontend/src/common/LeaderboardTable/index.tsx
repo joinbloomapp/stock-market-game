@@ -8,17 +8,16 @@ import {
   Icon16DeleteOutline,
   Icon16MoreVertical,
   Icon24SearchOutline,
-  Icon56UserAddOutline,
 } from '@vkontakte/icons';
 import cls from 'classnames';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
 import { UserContext } from '../../App';
 import Button, { ButtonType } from '../../components/Button';
 import Dropdown from '../../components/Dropdown';
 import Input, { InputHeight, InputStyle } from '../../components/Input';
 import Loader from '../../components/Loader';
+import useMobile from '../../hooks/useMobile';
 import { DashboardContext } from '../../modules/Dashboard';
 import GameService from '../../services/Game';
 import { Player } from '../../services/Game/types';
@@ -27,36 +26,25 @@ import { GameEvents } from '../../system/Analytics/events/GameEvents';
 import StringUtils from '../../utils/StringUtils';
 import StyleUtils from '../../utils/StyleUtils';
 
-interface ILeaderboardProps {
-  className?: string;
+interface ILeaderboardTableProps {
   loading: boolean;
   players: Player[];
 }
 
 export default function LeaderboardTable({
-  className,
   players = [],
   loading = false,
-}: ILeaderboardProps) {
+}: ILeaderboardTableProps) {
   const navigate = useNavigate();
   const { game } = useContext(DashboardContext);
   const [playerResults, setPlayerResults] = useState<Player[]>(players);
   const [query, setQuery] = useState('');
   const { user } = useContext(UserContext);
+  const isMobile = useMobile();
 
   useEffect(() => {
     setPlayerResults(players);
   }, [players.length]);
-
-  const removePlayer = async (playerId: string, leavingGame: boolean) => {
-    await GameService.removePlayer(game?.id as string, playerId);
-    Analytics.track(leavingGame ? GameEvents.LEAVE_GAME : GameEvents.KICK_PLAYER, {
-      gameId: game?.id,
-      inviteCode: game?.inviteCode,
-      playerId,
-    });
-    navigate(`/game/${game?.inviteCode}`);
-  };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -68,24 +56,33 @@ export default function LeaderboardTable({
   };
 
   const renderDropdown = (p: Player) => {
-    return (
-      game?.isGameAdmin &&
-      p?.userId !== user?.id && (
-        <Dropdown
-          menuBtn={<Icon16MoreVertical />}
-          items={[
-            {
-              content: (
-                <div className="flex items-center space-x-2">
-                  <Icon16DeleteOutline className="-mt-1 text-u-negative" />
-                  <p className="text-md">{game?.isGameAdmin ? 'Kick player' : 'Leave game'}</p>
-                </div>
-              ),
-              onClick: (e) => removePlayer(p.playerId, p?.userId === user?.id),
-            },
-          ]}
-        />
-      )
+    const removePlayer = async (playerId: string) => {
+      await GameService.removePlayer(game?.id as string, playerId);
+      Analytics.track(GameEvents.KICK_PLAYER, {
+        gameId: game?.id,
+        inviteCode: game?.inviteCode,
+        playerId,
+      });
+      navigate(`/game/${game?.inviteCode}`);
+    };
+
+    return game?.isGameAdmin && p?.userId !== user?.id ? (
+      <Dropdown
+        menuBtn={<Icon16MoreVertical />}
+        items={[
+          {
+            content: (
+              <div className="flex items-center space-x-2">
+                <Icon16DeleteOutline className="-mt-1 text-u-negative" />
+                <p className="text-md">{game?.isGameAdmin ? 'Kick player' : 'Leave game'}</p>
+              </div>
+            ),
+            onClick: (e) => removePlayer(p.playerId),
+          },
+        ]}
+      />
+    ) : (
+      <div className="w-12" />
     );
   };
 
@@ -105,18 +102,18 @@ export default function LeaderboardTable({
     };
 
     return (
-      <button
-        onClick={viewPortfolio}
+      <div
         key={p?.playerId}
-        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
+        className="flex justify-between items-center text-t-1 py-4 text-left md:px-4"
+        onClick={isMobile ? viewPortfolio : undefined}
       >
         <div className="flex space-x-4 w-full">
-          <div className="flex flex-shrink-0 justify-center items-center rounded-full w-11 h-11 bg-b-1">
+          <div className="flex basis-11 flex-shrink-0 justify-center items-center rounded-full w-11 h-11 bg-b-1">
             #{p.rank}
           </div>
-          <div className="flex items-center justify-between w-full">
-            <div>
-              <p className="text-md md:text-lg">
+          <div className="flex flex-grow items-center justify-between w-full">
+            <div className="">
+              <p className="text-sm md:text-lg">
                 {p.userId === user?.id ? user.name : p.name}
                 {p.userId === user?.id ? ' (you)' : ''}
                 {p.rank === 1 && <span className="ml-2">&#128081;</span>}
@@ -130,18 +127,31 @@ export default function LeaderboardTable({
               <p className="text-sm text-t-2">{StringUtils.USD(p.totalValue)}</p>
             </div>
           </div>
-          <div className="flex justify-center items-center text-t-3">
+          <div className="basis-64 items-center justify-center w-full hidden md:flex">
+            <Button
+              shadow
+              type={ButtonType.Secondary}
+              className="min-h-[32px] h-auto"
+              onClick={viewPortfolio}
+            >
+              See portfolio
+            </Button>
+          </div>
+          <div className="justify-center items-center text-t-3 basis-12 hidden md:flex">
+            {renderDropdown(p)}
+          </div>
+          <div className="justify-center items-center text-t-3 basis-12 flex md:hidden">
             <Icon16Chevron />
           </div>
         </div>
-      </button>
+      </div>
     );
   };
 
   return (
-    <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-4 md:px-7">
+    <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-4 md:px-7 mt-0">
       <div className="flex justify-between">
-        <p className="text-t-1 text-lg mb-2">
+        <p className="text-t-1 text-md md:text-lg mb-2">
           {playerResults.length || 'No'} player{playerResults.length !== 1 ? 's' : ''}{' '}
           {!players.length && 'yet'}
         </p>
@@ -151,11 +161,11 @@ export default function LeaderboardTable({
           inputStyle={InputStyle.Primary}
           inputHeight={InputHeight.Small}
           iconLeft={<Icon24SearchOutline className="mt-0.5" />}
-          className=" placeholder-t-2"
+          className=" placeholder-t-2 bg-transparent"
           value={query}
           onChange={onChange}
           autoComplete="off"
-          placeholder="Search a player..."
+          placeholder="Search players..."
         />
       </div>
 

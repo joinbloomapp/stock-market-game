@@ -46,7 +46,7 @@ export default function Browse() {
       searchAssets(query);
       fetchCategories();
     }
-  }, []);
+  }, [categoryId]);
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (timeoutRef.current) {
@@ -105,7 +105,7 @@ export default function Browse() {
       <button
         onClick={() => clickAsset(asset.ticker)}
         key={asset.ticker}
-        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
       >
         <div className="flex space-x-4">
           <img

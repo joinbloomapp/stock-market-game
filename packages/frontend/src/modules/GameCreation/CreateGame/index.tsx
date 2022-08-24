@@ -56,7 +56,7 @@ export default function CreateGame() {
   };
 
   return (
-    <div className="bg-b-2 w-[482px] rounded-xl text-center p-12 my-8">
+    <div className="bg-b-2 md:min-w-[482px] rounded-xl text-center p-8 md:p-12 my-8">
       <div className="flex flex-col space-y-4">
         <h1 className="text-2xl font-bold">Create a game?</h1>
         <form onSubmit={handleSubmit}>

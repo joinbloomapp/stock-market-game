@@ -30,7 +30,7 @@ export default function CategoryList({ categories }: ICategoryListProps) {
       <button
         onClick={() => clickCategory(category)}
         key={category.id}
-        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+        className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
       >
         <div className="flex space-x-4">
           <img

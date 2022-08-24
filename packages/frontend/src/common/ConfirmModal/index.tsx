@@ -27,7 +27,7 @@ export default function ConfirmModal({
     <Modal open={open} setOpen={setOpen}>
       <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl min-h-[250px] bg-b-2 p-9 text-left align-middle shadow-xl transition-all flex flex-col justify-between">
         <div>
-          <Dialog.Title as="h5" className="font-semibold text-center text-t-1 px-16">
+          <Dialog.Title as="h5" className="font-semibold text-center text-t-1 pr-12">
             {text}
           </Dialog.Title>
           <Button

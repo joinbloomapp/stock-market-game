@@ -172,9 +172,9 @@ export default function Graph({
       </div>
       <div className="h-[228px] w-full bg-b-3 light-pink-gradient mt-12 mb-4">
         {!loading && !graphDataError ? (
-          <ResponsiveContainer width="100%" height={totalHeight}>
+          <ResponsiveContainer width={`${(width / totalWidth) * 100}%`} height={totalHeight}>
             <LineChart
-              width={`${(width / totalWidth) * 100}%`}
+              width="100%"
               height={totalHeight}
               data={points}
               margin={{

@@ -147,11 +147,11 @@ export default function OrderHistoryCard({
           inputStyle={InputStyle.Primary}
           inputHeight={InputHeight.Small}
           iconLeft={<Icon24SearchOutline className="mt-0.5" />}
-          className=" placeholder-t-2"
+          className=" placeholder-t-2 bg-transparent"
           value={query}
           onChange={onChange}
           autoComplete="off"
-          placeholder="Search..."
+          placeholder="Search orders..."
         />
       </div>
       <div>

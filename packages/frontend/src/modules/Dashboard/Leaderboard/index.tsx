@@ -99,7 +99,7 @@ export default function Leaderboard() {
           className="mx-auto"
         />
       </div>
-      <LeaderboardTable players={players} loading={loading} className="mt-0" />
+      <LeaderboardTable players={players} loading={loading} />
     </div>
   );
 }

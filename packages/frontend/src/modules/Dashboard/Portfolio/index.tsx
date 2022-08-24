@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Icon16Chevron } from '@vkontakte/icons';
+import { Icon16Chevron, Icon28ArrowLeftOutline, Icon28ChevronLeftOutline } from '@vkontakte/icons';
 import cls from 'classnames';
 import dayjs from 'dayjs';
 import React, { LegacyRef, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useMatch, useNavigate, useParams } from 'react-router-dom';
+import { Link, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { DashboardContext } from '..';
 import { UserContext } from '../../../App';
 import LeaderboardImage from '../../../assets/images/leaderboard.png';
@@ -16,6 +16,7 @@ import LeaderboardTable from '../../../common/LeaderboardTable';
 import StatsBar, { StatsBarItem } from '../../../common/StatsBar';
 import Button, { ButtonType } from '../../../components/Button';
 import Loader from '../../../components/Loader';
+import useMobile from '../../../hooks/useMobile';
 import GameService from '../../../services/Game';
 import {
   CurrentPosition,
@@ -26,6 +27,7 @@ import {
   PopularAsset,
 } from '../../../services/Game/types';
 import Analytics from '../../../system/Analytics';
+import { GameEvents } from '../../../system/Analytics/events/GameEvents';
 import { PortfolioEvents } from '../../../system/Analytics/events/PortfolioEvents';
 import ArrayUtils from '../../../utils/ArrayUtils';
 import StringUtils from '../../../utils/StringUtils';
@@ -47,6 +49,7 @@ export default function Portfolio() {
   const leaderboardRef = useRef<HTMLDivElement>();
   const playerRefs = [useRef<HTMLDivElement>(), useRef<HTMLDivElement>(), useRef<HTMLDivElement>()];
   const { playerId } = useParams();
+  const isMobile = useMobile();
 
   const player = isPlayerPortfolio
     ? players.find((p) => p.playerId === playerId)
@@ -403,6 +406,16 @@ export default function Portfolio() {
     );
   };
 
+  const removePlayer = async () => {
+    await GameService.removePlayer(game?.id as string, player?.playerId as string);
+    Analytics.track(GameEvents.KICK_PLAYER, {
+      gameId: game?.id,
+      inviteCode: game?.inviteCode,
+      playerId: player?.playerId,
+    });
+    navigate(`/dashboard/g/${game?.inviteCode}/leaderboard`);
+  };
+
   if (isPlayerPortfolio && !player) {
     return <Loader />;
   }
@@ -410,20 +423,42 @@ export default function Portfolio() {
   return (
     <div>
       {isPlayerPortfolio ? (
-        <div className="flex space-x-4 items-center">
-          <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
-            #{player?.rank}
+        <div className="flex flex-wrap justify-between items-center">
+          {isMobile && (
+            <Link to="#" onClick={() => navigate(-1)}>
+              <Icon28ChevronLeftOutline className="text-t-1 mb-4 md:hidden" />
+            </Link>
+          )}
+          <div className="flex flex-wrap space-y-2 space-x-1 md:space-y-0 md:space-x-4 items-center">
+            <Button
+              type={ButtonType.IconButton}
+              onClick={() => navigate(-1)}
+              className="-ml-16 bg-b-3 w-12 h-12 hidden md:flex"
+            >
+              <Icon28ArrowLeftOutline />
+            </Button>
+            <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
+              #{player?.rank}
+            </div>
+            <div>
+              <h5 className="font-semibold">
+                {player?.name}'s portfolio{' '}
+                {player?.rank === 1 && <span className="ml-2">&#128081;</span>}
+              </h5>
+              <p className="text-t-2">
+                {player?.isGameAdmin ? 'Game admin · ' : ''}Joined on{' '}
+                {dayjs(player?.createdAt).format('MMM D, YYYY')}
+              </p>
+            </div>
           </div>
-          <div>
-            <h5 className="font-semibold">
-              {player?.name}'s portfolio{' '}
-              {player?.rank === 1 && <span className="ml-2">&#128081;</span>}
-            </h5>
-            <p className="text-t-2">
-              {player?.isGameAdmin ? 'Game admin · ' : ''}Joined on{' '}
-              {dayjs(player?.createdAt).format('MMM D, YYYY')}
-            </p>
-          </div>
+          <Button
+            shadow
+            type={ButtonType.Secondary}
+            className="min-h-[32px] h-auto text-u-negative"
+            onClick={removePlayer}
+          >
+            Kick player
+          </Button>
         </div>
       ) : (
         <p className="text-t-2">Your portfolio</p>
@@ -439,7 +474,7 @@ export default function Portfolio() {
           <Button
             shadow
             type={ButtonType.Primary}
-            className="w-full h-14 my-4"
+            className="w-full h-14"
             onClick={() => navigate(`/dashboard/g/${game?.inviteCode}/browse`)}
           >
             Buy a stock

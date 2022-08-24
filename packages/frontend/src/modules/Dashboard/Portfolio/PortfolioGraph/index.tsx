@@ -5,6 +5,7 @@
 
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import { DashboardContext } from '../..';
 import Graph from '../../../../common/Graph';
 import { Period, Point } from '../../../../common/Graph/types';
@@ -15,7 +16,6 @@ import Analytics from '../../../../system/Analytics';
 import { GameEvents } from '../../../../system/Analytics/events/GameEvents';
 import { PortfolioEvents } from '../../../../system/Analytics/events/PortfolioEvents';
 import PortfolioGraphUtils from './utils';
-import { ToastContainer, toast } from 'react-toastify';
 
 interface IPortfolioGraphProps {
   positions: CurrentPosition[];
@@ -55,7 +55,9 @@ export default function PortfolioGraph({
     if (game?.status === GameStatus.NOT_STARTED) {
       if (game?.isGameAdmin) {
         if (isPlayerPortfolio) {
-          return <p>{player.name} is waiting for you to start the game...</p>;
+          return (
+            <p className="text-center">{player.name} is waiting for you to start the game...</p>
+          );
         }
 
         return (
@@ -72,7 +74,7 @@ export default function PortfolioGraph({
 
       const admin = game?.admins?.length && game.admins[0];
       return (
-        <p>
+        <p className="text-center">
           {admin
             ? `Waiting for ${admin?.name} to start the game...`
             : 'You have not bought any stocks'}
@@ -82,11 +84,15 @@ export default function PortfolioGraph({
 
     if (!positions.length) {
       if (game?.status === GameStatus.FINISHED) {
-        return <p>{isPlayerPortfolio ? player?.name : 'You'} did not buy any stocks &#128533;</p>;
+        return (
+          <p className="text-center">
+            {isPlayerPortfolio ? player?.name : 'You'} did not buy any stocks &#128533;
+          </p>
+        );
       }
 
       if (isPlayerPortfolio) {
-        return <p>{player.name} has not bought any stocks</p>;
+        return <p className="text-center">{player.name} has not bought any stocks</p>;
       }
 
       return (

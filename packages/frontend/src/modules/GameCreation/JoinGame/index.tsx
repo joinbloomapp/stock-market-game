@@ -45,7 +45,7 @@ export default function JoinGame() {
 
   return (
     <>
-      <div className="bg-b-2 w-[482px] h-[350px] rounded-xl text-center p-12 absolute-vertical-center">
+      <div className="bg-b-2 w-11/12 md:w-[482px] h-[340px] rounded-xl text-center p-8 md:p-12 absolute-vertical-center">
         <div className="flex flex-col space-y-8 h-full">
           <h1 className="text-2xl font-bold">Join a game</h1>
           <form className="space-y-10" onSubmit={onSubmit}>

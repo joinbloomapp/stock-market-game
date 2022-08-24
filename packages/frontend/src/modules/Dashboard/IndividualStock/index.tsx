@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Icon16Chevron } from '@vkontakte/icons';
+import { Icon16Chevron, Icon28ArrowLeftOutline, Icon28ChevronLeftOutline } from '@vkontakte/icons';
 import cls from 'classnames';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
 import { DashboardContext } from '..';
@@ -16,6 +16,7 @@ import StatsBar from '../../../common/StatsBar';
 import Button, { ButtonType } from '../../../components/Button';
 import DictTable from '../../../components/DictTable';
 import Loader from '../../../components/Loader';
+import useMobile from '../../../hooks/useMobile';
 import AssetsService from '../../../services/Assets';
 import { AssetBasicInfo, AssetKeyStats, AssetRelated } from '../../../services/Assets/types';
 import GameService from '../../../services/Game';
@@ -278,6 +279,8 @@ export default function IndividualStock() {
     );
   };
 
+  const isMobile = useMobile();
+
   return (
     <>
       {offset > window.innerHeight / 4 && (
@@ -292,7 +295,19 @@ export default function IndividualStock() {
         </div>
       )}
       <div>
+        <Link to="#" onClick={() => navigate(-1)} className="md:hidden">
+          <Icon28ChevronLeftOutline className="text-t-1 mb-4" />
+        </Link>
         <div className="flex space-x-4 items-center">
+          {!isMobile && (
+            <Button
+              type={ButtonType.IconButton}
+              onClick={() => navigate(-1)}
+              className="hidden md:flex -ml-16 bg-b-3 w-12 h-12"
+            >
+              <Icon28ArrowLeftOutline />
+            </Button>
+          )}
           <img
             src={basicInfo?.image}
             alt={basicInfo?.name}
@@ -305,7 +320,7 @@ export default function IndividualStock() {
         </div>
         <IndividualStockGraph ticker={ticker!} setLatestPrice={setLatestPrice} />
         {!loading && game?.status === GameStatus.ACTIVE && (
-          <div className="flex justify-between space-x-4 -ml-4 px-4 py-4 w-full fixed bottom-20 md:static md:-ml-0 md:px-0 z-40 ">
+          <div className="flex justify-between space-x-4 -ml-4 px-4 py-4 md:py-0 w-full fixed bottom-20 md:static md:-ml-0 md:px-0 z-40 ">
             {position && (
               <Button
                 shadow
