@@ -78,7 +78,7 @@ export default function DollarInput({
         value={amount}
         {...rest}
         type="text"
-        pattern="[0-9]+([\.,][0-9]+)?"
+        pattern="[0-9]+([\.,][0-9]+){0,2}"
         style={{ width: length, padding: 0 }}
         placeholder="0"
         className={cls(
