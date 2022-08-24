@@ -10,6 +10,7 @@ import { DashboardContext } from '../..';
 import Graph from '../../../../common/Graph';
 import { Period, Point } from '../../../../common/Graph/types';
 import Button, { ButtonType } from '../../../../components/Button';
+import useMobile from '../../../../hooks/useMobile';
 import GameService from '../../../../services/Game';
 import { CurrentPosition, GameStatus, Player } from '../../../../services/Game/types';
 import Analytics from '../../../../system/Analytics';
@@ -29,6 +30,7 @@ export default function PortfolioGraph({
   player,
 }: IPortfolioGraphProps) {
   const navigate = useNavigate();
+  const isMobile = useMobile();
   const { GRAPH_WIDTH, GRAPH_HEIGHT, PERIODS } = PortfolioGraphUtils;
   const { game, setGame } = useContext(DashboardContext);
 
@@ -136,7 +138,7 @@ export default function PortfolioGraph({
         isPortfolioGraph
       />
       <ToastContainer
-        position="top-right"
+        position={isMobile ? 'top-center' : 'top-right'}
         autoClose={2000}
         hideProgressBar
         newestOnTop={false}
@@ -145,6 +147,7 @@ export default function PortfolioGraph({
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className="top-16 px-4 md:top-5"
         toastClassName="bg-b-3 rounded-2xl cursor-pointer p-3"
         bodyClassName="text-t-1 text-md flex items-center pl-3"
       />

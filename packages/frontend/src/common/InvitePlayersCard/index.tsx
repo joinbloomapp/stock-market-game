@@ -10,6 +10,7 @@ import { useMatch } from 'react-router-dom';
 import { Id, toast, ToastContainer } from 'react-toastify';
 import { UserContext } from '../../App';
 import Button, { ButtonType } from '../../components/Button';
+import useMobile from '../../hooks/useMobile';
 import Analytics from '../../system/Analytics';
 import { GameEvents } from '../../system/Analytics/events/GameEvents';
 import ClipboardUtils from '../../utils/ClipboardUtils';
@@ -20,6 +21,7 @@ interface IInvitePlayersCardProps {
 
 export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProps) {
   const { user } = useContext(UserContext);
+  const isMobile = useMobile();
   const dashboard = useMatch('/dashboard/g/:inviteCode/settings');
   const lobby = useMatch('/game/:inviteCode');
   const inviteLink = `https://game.joinbloom.co/game/${inviteCode}`;
@@ -116,7 +118,7 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
         </div>
       </div>
       <ToastContainer
-        position="top-right"
+        position={isMobile ? 'top-center' : 'top-right'}
         autoClose={1000}
         hideProgressBar
         newestOnTop={false}
@@ -125,6 +127,7 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className="top-16 px-4 md:top-5"
         toastClassName="bg-b-3 rounded-2xl cursor-pointer p-3"
         bodyClassName="text-t-1 text-md flex items-center pl-3"
       />

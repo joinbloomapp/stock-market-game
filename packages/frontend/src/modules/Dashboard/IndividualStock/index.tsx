@@ -36,6 +36,7 @@ import { getAboutTableData, getKeyStatsTableData, getStatsBarsData } from './uti
 export default function IndividualStock() {
   const navigate = useNavigate();
   const { game } = useContext(DashboardContext);
+  const isMobile = useMobile();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [orderType, setOrderType] = useState<OrderType>(OrderType.BUY);
@@ -279,8 +280,6 @@ export default function IndividualStock() {
     );
   };
 
-  const isMobile = useMobile();
-
   return (
     <>
       {offset > window.innerHeight / 4 && (
@@ -366,7 +365,7 @@ export default function IndividualStock() {
         }}
       />
       <ToastContainer
-        position="top-right"
+        position={isMobile ? 'top-center' : 'top-right'}
         autoClose={2000}
         newestOnTop={false}
         closeOnClick
@@ -374,6 +373,7 @@ export default function IndividualStock() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className="top-16 px-4 md:top-5"
         toastClassName="bg-b-3 rounded-2xl cursor-pointer p-3"
         bodyClassName="text-t-1 text-md flex items-center pl-3"
       />

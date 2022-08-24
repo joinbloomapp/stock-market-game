@@ -102,7 +102,7 @@ export default function Dashboard() {
         </div>
         <Navigation />
         <div className="z-10 w-full flex justify-center pb-36 pt-20 md:pt-10 md:pb-10 px-4 md:px-0">
-          <div className="w-full md:w-[80%] max-w-3xl">
+          <div className="w-full md:w-[90%] max-w-3xl">
             <Routes>
               <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
