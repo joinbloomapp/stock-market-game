@@ -16,10 +16,8 @@ import './App.css';
 import ChatwootWidget from './common/ChatwootWidget';
 import LoadingScreen from './common/LoadingScreen';
 import PrivateRoute from './common/PrivateRoute';
-import useMobile from './hooks/useMobile';
 import Dashboard from './modules/Dashboard';
 import GameCreation from './modules/GameCreation';
-import MobileLanding from './modules/MobileLanding';
 import NotFound from './modules/NotFound';
 import Onboarding from './modules/Onboarding';
 import PasswordReset from './modules/PasswordReset';
@@ -76,34 +74,6 @@ function App() {
     }
   }, []);
 
-  const renderRoutes = () => {
-    // if (isMobile) {
-    //   return <Route path="/mobile" element={<MobileLanding />} />;
-    // }
-
-    return (
-      <>
-        <Route path="/" element={<Navigate to={user ? '/dashboard/g' : '/game'} replace />} />
-        <Route
-          path="/start"
-          element={user ? <Navigate to="/dashboard/g" replace /> : <Onboarding />}
-        />
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/dashboard/g" replace /> : <Onboarding />}
-        />
-        <Route path="/dashboard" element={<Navigate to="/dashboard/g" replace />} />
-        <Route path="/dashboard/g" element={<PrivateRoute Component={Dashboard} />} />
-        <Route path="/dashboard/g/:inviteCode/*" element={<PrivateRoute Component={Dashboard} />} />
-        <Route path="/game/*" element={<GameCreation />} />
-        <Route path="/password/*" element={<PasswordReset />} />
-        <Route path="/404" element={<NotFound />} />
-      </>
-    );
-  };
-
-  const isMobile = useMobile();
-
   if (loading) {
     return <LoadingScreen />;
   }
@@ -114,7 +84,24 @@ function App() {
       <UserContext.Provider value={{ user, setUser }}>
         <Router>
           <Routes>
-            {renderRoutes()}
+            <Route path="/" element={<Navigate to={user ? '/dashboard/g' : '/game'} replace />} />
+            <Route
+              path="/start"
+              element={user ? <Navigate to="/dashboard/g" replace /> : <Onboarding />}
+            />
+            <Route
+              path="/login"
+              element={user ? <Navigate to="/dashboard/g" replace /> : <Onboarding />}
+            />
+            <Route path="/dashboard" element={<Navigate to="/dashboard/g" replace />} />
+            <Route path="/dashboard/g" element={<PrivateRoute Component={Dashboard} />} />
+            <Route
+              path="/dashboard/g/:inviteCode/*"
+              element={<PrivateRoute Component={Dashboard} />}
+            />
+            <Route path="/game/*" element={<GameCreation />} />
+            <Route path="/password/*" element={<PasswordReset />} />
+            <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
         </Router>
