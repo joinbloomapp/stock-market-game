@@ -3,18 +3,20 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Icon16Chevron } from '@vkontakte/icons';
+import { Icon16Chevron, Icon28ArrowLeftOutline, Icon28ChevronLeftOutline } from '@vkontakte/icons';
 import cls from 'classnames';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 import { DashboardContext } from '..';
 import OrderHistoryCard from '../../../common/OrderHistoryCard';
 import StatsBar from '../../../common/StatsBar';
 import Button, { ButtonType } from '../../../components/Button';
 import DictTable from '../../../components/DictTable';
 import Loader from '../../../components/Loader';
+import useMobile from '../../../hooks/useMobile';
 import AssetsService from '../../../services/Assets';
 import { AssetBasicInfo, AssetKeyStats, AssetRelated } from '../../../services/Assets/types';
 import GameService from '../../../services/Game';
@@ -34,6 +36,7 @@ import { getAboutTableData, getKeyStatsTableData, getStatsBarsData } from './uti
 export default function IndividualStock() {
   const navigate = useNavigate();
   const { game } = useContext(DashboardContext);
+  const isMobile = useMobile();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [orderType, setOrderType] = useState<OrderType>(OrderType.BUY);
@@ -139,7 +142,7 @@ export default function IndividualStock() {
         {!loading && basicInfo ? (
           <>
             <div>
-              <p className={cls('mt-2', { 'line-clamp': clampAboutText })}>
+              <p className={cls('mt-2 text-md md:text-lg', { 'line-clamp': clampAboutText })}>
                 {basicInfo?.description}
               </p>
               <Button type={ButtonType.Link} className="mt-4" onClick={clickShowMoreOrLess}>
@@ -169,14 +172,14 @@ export default function IndividualStock() {
           href={item.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full justify-around space-x-4 py-4 h-[144px] text-left rounded-2xl hover:bg-line-1 px-4"
+          className="flex w-full justify-around space-x-4 py-4 h-[144px] text-left rounded-2xl md:hover:bg-line-1 px-4"
           onClick={() => Analytics.track(IndividualAssetEvents.CLICKED_NEWS_ITEM, item)}
         >
           <div>
-            <p className="text-t-2 text-md">
+            <p className="text-t-2 text-sm md:text-md">
               {item.sourceName} · {dayjs(item.date).fromNow(true)}
             </p>
-            <p className="font-bold text-xl line-clamp">{item.snippet}</p>
+            <p className="font-bold text-lg md:text-xl line-clamp">{item.snippet}</p>
           </div>
           <img
             src={item.imageSource}
@@ -188,18 +191,20 @@ export default function IndividualStock() {
     };
 
     return (
-      <div className="flex rounded-2xl space-x-8 bg-b-2 text-t-1 mt-4 py-6">
+      <div className="flex flex-col md:flex-row divide-y-0.5 md:divide-x-0.5 divide-line-1 md:divide-y-0 rounded-2xl md:space-x-4 bg-b-2 text-t-1 mt-4 py-4 px-4">
         {!loading ? (
           <>
             <div
-              className={cls('flex w-full pl-4', {
-                'flex-col divide-y-0.5 divide-line-1': news.length > 2,
-              })}
+              className={twMerge(
+                cls('flex flex-col md:flex-row w-full', {
+                  'md:flex-col divide-y-0.5 divide-line-1': news.length > 2,
+                })
+              )}
             >
               {news.slice(0, 2).map(renderNewsItem)}
             </div>
             {news.length > 2 && (
-              <div className="flex flex-col w-full divide-y-0.5 divide-line-1 pr-4">
+              <div className="flex flex-col w-full divide-y-0.5 divide-line-1">
                 {news.slice(2, 4).map(renderNewsItem)}
               </div>
             )}
@@ -213,7 +218,7 @@ export default function IndividualStock() {
 
   const renderKeyStats = () => {
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 mt-4 py-5 px-7">
+      <div className="rounded-2xl bg-b-2 text-t-1 mt-4 py-5 px-4 md:px-7">
         <p className="text-t-1 text-lg">Key stats</p>
         {!loading ? (
           <div className="flex mt-4">
@@ -241,7 +246,7 @@ export default function IndividualStock() {
         <button
           onClick={() => clickAsset(asset.ticker)}
           key={asset.ticker}
-          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
         >
           <div className="flex space-x-4">
             <img
@@ -264,7 +269,7 @@ export default function IndividualStock() {
     };
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 mt-4 py-5 px-7">
+      <div className="rounded-2xl bg-b-2 text-t-1 mt-4 py-4 px-4 md:px-7">
         <p className="text-t-1 text-lg mb-2">Related stocks</p>
         {!loading ? (
           <div className="flex flex-col">{relatedAssets.map(renderListItem)}</div>
@@ -289,7 +294,19 @@ export default function IndividualStock() {
         </div>
       )}
       <div>
+        <Link to="#" onClick={() => navigate(-1)} className="md:hidden">
+          <Icon28ChevronLeftOutline className="text-t-1 mb-4" />
+        </Link>
         <div className="flex space-x-4 items-center">
+          {!isMobile && (
+            <Button
+              type={ButtonType.IconButton}
+              onClick={() => navigate(-1)}
+              className="hidden md:flex -ml-16 bg-b-3 w-12 h-12"
+            >
+              <Icon28ArrowLeftOutline />
+            </Button>
+          )}
           <img
             src={basicInfo?.image}
             alt={basicInfo?.name}
@@ -302,7 +319,7 @@ export default function IndividualStock() {
         </div>
         <IndividualStockGraph ticker={ticker!} setLatestPrice={setLatestPrice} />
         {!loading && game?.status === GameStatus.ACTIVE && (
-          <div className="flex justify-between space-x-4">
+          <div className="flex justify-between space-x-4 -ml-4 px-4 py-4 md:py-0 w-full fixed bottom-20 md:static md:-ml-0 md:px-0 z-40 ">
             {position && (
               <Button
                 shadow
@@ -319,7 +336,7 @@ export default function IndividualStock() {
           </div>
         )}
         {game?.status !== GameStatus.NOT_STARTED && position && (
-          <StatsBar stats={getStatsBarsData(position)} />
+          <StatsBar stats={getStatsBarsData(position)} className="mt-4" />
         )}
         {renderAbout()}
         <div className="mt-4">
@@ -348,7 +365,7 @@ export default function IndividualStock() {
         }}
       />
       <ToastContainer
-        position="top-right"
+        position={isMobile ? 'top-center' : 'top-right'}
         autoClose={2000}
         newestOnTop={false}
         closeOnClick
@@ -356,6 +373,7 @@ export default function IndividualStock() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className="top-16 px-4 md:top-5"
         toastClassName="bg-b-3 rounded-2xl cursor-pointer p-3"
         bodyClassName="text-t-1 text-md flex items-center pl-3"
       />

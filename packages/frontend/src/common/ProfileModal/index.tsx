@@ -6,15 +6,15 @@
 import { Dialog } from '@headlessui/react';
 import { Icon24Cancel } from '@vkontakte/icons';
 import React, { useContext, useEffect, useState } from 'react';
-import { DashboardContext } from '../..';
-import { UserContext } from '../../../../App';
-import Button, { ButtonType } from '../../../../components/Button';
-import Input, { InputHeight, InputStyle } from '../../../../components/Input';
-import Modal, { IModalProps } from '../../../../components/Modal';
-import UserService from '../../../../services/User';
-import Analytics from '../../../../system/Analytics';
-import { ProfileEvents } from '../../../../system/Analytics/events/ProfileEvents';
-import StringUtils from '../../../../utils/StringUtils';
+import { UserContext } from '../../App';
+import Button, { ButtonType } from '../../components/Button';
+import Input, { InputHeight, InputStyle } from '../../components/Input';
+import Modal, { IModalProps } from '../../components/Modal';
+import { DashboardContext } from '../../modules/Dashboard';
+import UserService from '../../services/User';
+import Analytics from '../../system/Analytics';
+import { ProfileEvents } from '../../system/Analytics/events/ProfileEvents';
+import StringUtils from '../../utils/StringUtils';
 
 export interface IProfileModalProps extends IModalProps {}
 
@@ -133,7 +133,7 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
 
   return (
     <Modal open={open} setOpen={setOpen}>
-      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl min-h-[480px] bg-b-2 p-10 text-left align-middle shadow-xl transition-all flex flex-col justify-between relative">
+      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl min-h-[480px] bg-b-2 pt-9 pb-0 px-4 md:px-9 text-left align-middle shadow-xl transition-all flex flex-col justify-between relative">
         <form onSubmit={onSubmit}>
           <div>
             <Dialog.Title as="h5" className="font-semibold text-center text-t-1">
@@ -141,7 +141,7 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
             </Dialog.Title>
             <Button
               type={ButtonType.IconButton}
-              className="absolute w-6 h-6 top-11 right-9 text-t-3 bg-transparent"
+              className="absolute w-6 h-6 top-10 right-9 text-t-3 bg-transparent"
               onClick={() => setOpen(false)}
               buttonType="button"
             >
@@ -215,7 +215,7 @@ export default function ProfileModal({ open, setOpen }: IProfileModalProps) {
               </div>
             </div>
           </div>
-          <div className="absolute flex space-x-3 w-full bottom-10 left-0 right-0 mr-auto ml-auto px-8">
+          <div className="absolute flex space-x-3 w-full bottom-8 left-0 right-0 mr-auto ml-auto px-4">
             {!viewingOtherUser ? (
               <Button
                 shadow

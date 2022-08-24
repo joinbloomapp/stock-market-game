@@ -56,7 +56,7 @@ export default function PlayerLobby({ game, joinGame }: IPlayerLobbyProps) {
   }
 
   return (
-    <div className="bg-b-2 w-[482px] rounded-xl text-center p-12 my-8">
+    <div className="bg-b-2 w-11/12 md:w-[482px] rounded-xl text-center p-8 md:p-12 my-8">
       <h5 className="font-bold">{game.name}</h5>
       <p className="text-t-3 my-4">Created by {game.admins[0].name}</p>
       <DictTable columns={tableColumns} classNames={{ container: 'bg-b-3 px-3' }} />

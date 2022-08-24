@@ -10,6 +10,7 @@ import { useMatch } from 'react-router-dom';
 import { Id, toast, ToastContainer } from 'react-toastify';
 import { UserContext } from '../../App';
 import Button, { ButtonType } from '../../components/Button';
+import useMobile from '../../hooks/useMobile';
 import Analytics from '../../system/Analytics';
 import { GameEvents } from '../../system/Analytics/events/GameEvents';
 import ClipboardUtils from '../../utils/ClipboardUtils';
@@ -20,6 +21,7 @@ interface IInvitePlayersCardProps {
 
 export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProps) {
   const { user } = useContext(UserContext);
+  const isMobile = useMobile();
   const dashboard = useMatch('/dashboard/g/:inviteCode/settings');
   const lobby = useMatch('/game/:inviteCode');
   const inviteLink = `https://game.joinbloom.co/game/${inviteCode}`;
@@ -64,31 +66,20 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
 
   return (
     <>
-      <div
-        className={cls('bg-b-2 w-full rounded-xl rounded-t-xl', {
-          'h-[393px]': lobby,
-          'h-[300px]': dashboard,
-        })}
-      >
-        <div
-          className={cls('w-full rounded-t-xl light-pink-gradient p-8', {
-            'h-[282px]': lobby,
-            'h-[190px]': dashboard,
-          })}
-        >
-          <p>Invite players</p>
+      <div className="bg-b-2 w-full rounded-xl rounded-t-xl py-2">
+        <div className="w-full rounded-t-xl light-pink-gradient p-8">
+          <p className="text-center md:text-left">Invite players</p>
           <div
-            className={cls('flex w-full h-full items-center', {
-              'flex-col justify-center': lobby,
-              'justify-between': dashboard,
+            className={cls('flex flex-wrap justify-center w-full h-full items-center', {
+              'flex-col': lobby,
+              'md:justify-between': dashboard,
             })}
           >
-            <div className="flex items-center">
+            <div className="flex items-center mt-4">
               <h1
-                className={cls('tracking-[16px] md:tracking-[21.5px] font-semibold text-a-1', {
-                  'mt-2 text-3xl md:text-6xl': lobby,
-                  'mt-4 text-5xl': dashboard,
-                })}
+                className={cls(
+                  'tracking-[8px] md:tracking-[21.5px] font-semibold text-a-1 text-5xl'
+                )}
                 style={{ textShadow: '0px 0px 0px #912054' }}
               >
                 {inviteCode}
@@ -115,9 +106,8 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
         <div className="flex justify-between items-center bg-b-3 text-t-1 h-16 text-lg rounded-2xl px-4 my-4 mx-4 relative">
           <div className="flex flex-col">
             <p className="text-t-3 text-xs uppercase">INVITE LINK</p>
-            <p className="text-xs md:text-lg">{inviteLink.substring(8)}</p>
+            <p className="text-sm md:text-lg">{inviteLink.substring(8)}</p>
           </div>
-
           <Button
             type={ButtonType.Secondary}
             className="bg-line-1 w-1/8 text-md rounded-r-2xl rounded-l-none absolute right-0 active:bg-[#232134]"
@@ -128,7 +118,7 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
         </div>
       </div>
       <ToastContainer
-        position="top-right"
+        position={isMobile ? 'top-center' : 'top-right'}
         autoClose={1000}
         hideProgressBar
         newestOnTop={false}
@@ -137,6 +127,7 @@ export default function InvitePlayersCard({ inviteCode }: IInvitePlayersCardProp
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className="top-16 px-4 md:top-5"
         toastClassName="bg-b-3 rounded-2xl cursor-pointer p-3"
         bodyClassName="text-t-1 text-md flex items-center pl-3"
       />

@@ -39,14 +39,17 @@ export default function DictTable({ columns = [], classNames }: ITableProps) {
         .map((_, i) => {
           const row = columns.map((col) => col[i]);
           return (
-            <div key={i} className="flex w-full divide-x-1 divide-line-1 space-x-4">
+            <div
+              key={i}
+              className="flex flex-col md:flex-row w-full divide-y-1 md:divide-x-1 divide-line-1 md:space-x-4"
+            >
               {row.map((cell: TableValue, j) => {
                 return (
                   <div
                     key={j}
                     className={twMerge(
                       cls('flex w-full justify-between items-center py-4', {
-                        'pl-6': j > 0,
+                        'md:pl-6': j > 0,
                       }),
                       classNames?.row
                     )}

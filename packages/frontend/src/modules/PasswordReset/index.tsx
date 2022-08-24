@@ -16,9 +16,9 @@ export default function PasswordReset() {
   }
 
   return (
-    <div className="bg-polka bg-center bg-cover h-screen">
+    <div className="flex flex-col bg-polka bg-fixed bg-center bg-cover bg-repeat min-h-screen">
       <Header />
-      <div className="flex justify-center text-t-1 mt-16 px-2 md:px-16 lg:px-24">
+      <div className="flex justify-center items-center text-t-1 mt-12 w-full py-6">
         <Routes>
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/reset/:token" element={<ResetPassword />} />

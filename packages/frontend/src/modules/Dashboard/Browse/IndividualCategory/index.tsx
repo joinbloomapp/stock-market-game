@@ -3,15 +3,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { Icon28ArrowLeftOutline, Icon28ChevronLeftOutline } from '@vkontakte/icons';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import Button, { ButtonType } from '../../../../components/Button';
 import Loader from '../../../../components/Loader';
+import useMobile from '../../../../hooks/useMobile';
 import CategoriesService from '../../../../services/Categories';
 import { Category } from '../../../../services/Categories/types';
 import AssetsList from './AssetsList';
-import _ from 'lodash';
-import Button, { ButtonType } from '../../../../components/Button';
-import { Icon28ArrowLeftOutline } from '@vkontakte/icons';
 
 export default function IndividualCategory() {
   const navigate = useNavigate();
@@ -27,6 +27,8 @@ export default function IndividualCategory() {
     setLoading(false);
   };
 
+  const isMobile = useMobile();
+
   useEffect(() => {
     getCategory();
   }, []);
@@ -37,14 +39,19 @@ export default function IndividualCategory() {
 
   return (
     <div>
+      <Link to="#" onClick={() => navigate(-1)} className="md:hidden">
+        <Icon28ChevronLeftOutline className="text-t-1 mb-4" />
+      </Link>
       <div className="flex space-x-4 items-center">
-        <Button
-          type={ButtonType.IconButton}
-          onClick={() => navigate(-1)}
-          className="-ml-16 bg-b-3 w-12 h-12"
-        >
-          <Icon28ArrowLeftOutline />
-        </Button>
+        {!isMobile && (
+          <Button
+            type={ButtonType.IconButton}
+            onClick={() => navigate(-1)}
+            className="-ml-16 bg-b-3 w-12 h-12"
+          >
+            <Icon28ArrowLeftOutline />
+          </Button>
+        )}
         <img src={category.image} alt={category.name} className="rounded-2xl w-16 h-16" />
         <div>
           <h5 className="font-semibold">{category.name}</h5>

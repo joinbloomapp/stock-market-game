@@ -18,9 +18,9 @@ export default function GameCreation() {
   }
 
   return (
-    <div className="bg-polka bg-center bg-cover bg-repeat min-h-screen">
+    <div className="flex flex-col bg-polka bg-center bg-cover bg-fixed bg-repeat min-h-screen">
       <Header />
-      <div className="flex flex-col justify-center items-center text-t-1 mt-12 p-4 md:px-16 lg:px-24">
+      <div className="flex justify-center items-center text-t-1 mt-12 w-full py-6">
         <Routes>
           <Route path="/join" element={<JoinGame />} />
           <Route path=":inviteCode" element={<Lobbies />} />

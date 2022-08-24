@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Icon16Chevron } from '@vkontakte/icons';
+import { Icon16Chevron, Icon28ArrowLeftOutline, Icon28ChevronLeftOutline } from '@vkontakte/icons';
 import cls from 'classnames';
 import dayjs from 'dayjs';
 import React, { LegacyRef, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useMatch, useNavigate, useParams } from 'react-router-dom';
+import { Link, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { DashboardContext } from '..';
 import { UserContext } from '../../../App';
 import LeaderboardImage from '../../../assets/images/leaderboard.png';
@@ -16,6 +16,7 @@ import LeaderboardTable from '../../../common/LeaderboardTable';
 import StatsBar, { StatsBarItem } from '../../../common/StatsBar';
 import Button, { ButtonType } from '../../../components/Button';
 import Loader from '../../../components/Loader';
+import useMobile from '../../../hooks/useMobile';
 import GameService from '../../../services/Game';
 import {
   CurrentPosition,
@@ -26,6 +27,7 @@ import {
   PopularAsset,
 } from '../../../services/Game/types';
 import Analytics from '../../../system/Analytics';
+import { GameEvents } from '../../../system/Analytics/events/GameEvents';
 import { PortfolioEvents } from '../../../system/Analytics/events/PortfolioEvents';
 import ArrayUtils from '../../../utils/ArrayUtils';
 import StringUtils from '../../../utils/StringUtils';
@@ -47,6 +49,7 @@ export default function Portfolio() {
   const leaderboardRef = useRef<HTMLDivElement>();
   const playerRefs = [useRef<HTMLDivElement>(), useRef<HTMLDivElement>(), useRef<HTMLDivElement>()];
   const { playerId } = useParams();
+  const isMobile = useMobile();
 
   const player = isPlayerPortfolio
     ? players.find((p) => p.playerId === playerId)
@@ -180,7 +183,7 @@ export default function Portfolio() {
         <button
           onClick={() => clickAsset(position.ticker)}
           key={position.ticker}
-          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
         >
           <div className="flex space-x-4 w-full">
             <img
@@ -211,7 +214,7 @@ export default function Portfolio() {
     };
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-7">
+      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-4 md:px-7">
         <p className="text-t-1 text-lg mb-2">
           {isPlayerPortfolio ? `${player?.name}'s` : 'My'} stocks
         </p>
@@ -248,7 +251,7 @@ export default function Portfolio() {
         <button
           onClick={() => clickAsset(asset.ticker)}
           key={asset.ticker}
-          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl px-4"
+          className="flex justify-between items-center text-t-1 py-4 text-left hover:bg-b-3 hover:rounded-2xl md:px-4"
         >
           <div className="flex space-x-4 w-full">
             <img
@@ -273,7 +276,7 @@ export default function Portfolio() {
     };
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-7">
+      <div className="rounded-2xl bg-b-2 text-t-1 my-4 py-5 px-4 md:px-7">
         <p className="text-t-1 text-lg mb-2">Popular stocks</p>
         <div>
           {!loading ? (
@@ -320,81 +323,97 @@ export default function Portfolio() {
     ];
 
     return (
-      <div className="rounded-2xl bg-b-2 text-t-1 my-4 pt-5">
-        <div className="flex justify-between text-t-1 -mb-12 mx-7">
-          <p>Leaderboard</p>
-          <Button
-            type={ButtonType.Link}
-            className="text-t-1 font-normal z-20"
-            onClick={() => {
-              Analytics.track(PortfolioEvents.CLICKED_LEADERBOARD_SHOW_ALL, {
-                gameId: game?.id,
-                inviteCode: game?.inviteCode,
-              });
-              navigate(`/dashboard/g/${game?.inviteCode}/leaderboard`);
-            }}
-          >
-            Show all
-            <Icon16Chevron className="ml-1 text-i-1" />
-          </Button>
+      <>
+        <div className="md:hidden">
+          <LeaderboardTable players={players} loading={loading} />
         </div>
-        <div className="relative" ref={leaderboardRef as LegacyRef<HTMLDivElement> | undefined}>
-          {players.slice(0, 3).map((p, i) => {
-            return (
-              <React.Fragment key={p.playerId}>
-                <div
-                  ref={playerRefs[i] as LegacyRef<HTMLDivElement> | undefined}
-                  className={cls('flex flex-col absolute', styles[i].container)}
-                >
-                  <p
-                    className={cls(
-                      'text-lg font-bold mb-4 text-ellipsis overflow-hidden whitespace-nowrap',
-                      styles[i].text
-                    )}
-                  >
-                    {p.name}
-                  </p>
+        <div className="rounded-2xl bg-b-2 text-t-1 my-4 pt-5 hidden md:block">
+          <div className="flex justify-between text-t-1 -mb-12 mx-7">
+            <p>Leaderboard</p>
+            <Button
+              type={ButtonType.Link}
+              className="text-t-1 font-normal z-20"
+              onClick={() => {
+                Analytics.track(PortfolioEvents.CLICKED_LEADERBOARD_SHOW_ALL, {
+                  gameId: game?.id,
+                  inviteCode: game?.inviteCode,
+                });
+                navigate(`/dashboard/g/${game?.inviteCode}/leaderboard`);
+              }}
+            >
+              Show all
+              <Icon16Chevron className="ml-1 text-i-1" />
+            </Button>
+          </div>
+          <div className="relative" ref={leaderboardRef as LegacyRef<HTMLDivElement> | undefined}>
+            {players.slice(0, 3).map((p, i) => {
+              return (
+                <React.Fragment key={p.playerId}>
                   <div
-                    key={p.playerId}
-                    className={cls(
-                      'flex items-center justify-center bg-a-1 text-t-1 py-1 px-2 pink-shadow-small rounded-lg font-medium text-ellipsis overflow-hidden whitespace-nowrap',
-                      styles[i].dollar
-                    )}
+                    ref={playerRefs[i] as LegacyRef<HTMLDivElement> | undefined}
+                    className={cls('flex flex-col absolute', styles[i].container)}
                   >
-                    {StringUtils.USD(p.totalValue)}
+                    <p
+                      className={cls(
+                        'text-lg font-bold mb-4 text-ellipsis overflow-hidden whitespace-nowrap',
+                        styles[i].text
+                      )}
+                    >
+                      {p.name}
+                    </p>
+                    <div
+                      key={p.playerId}
+                      className={cls(
+                        'flex items-center justify-center bg-a-1 text-t-1 py-1 px-2 pink-shadow-small rounded-lg font-medium text-ellipsis overflow-hidden whitespace-nowrap',
+                        styles[i].dollar
+                      )}
+                    >
+                      {StringUtils.USD(p.totalValue)}
+                    </div>
                   </div>
-                </div>
-              </React.Fragment>
-            );
-          })}
-          <img
-            src={LeaderboardImage}
-            alt="leaderboard graphic"
-            width="600"
-            height="330"
-            className="mx-auto"
-          />
-        </div>
-        <div className="flex items-center space-x-4 bg-b-3 bottom-0 w-full h-20 rounded-b-2xl px-7">
-          <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
-            #{player?.rank}
+                </React.Fragment>
+              );
+            })}
+            <img
+              src={LeaderboardImage}
+              alt="leaderboard graphic"
+              width="600"
+              height="330"
+              className="mx-auto"
+            />
           </div>
-          <div className="flex flex-row justify-between items-center w-full text-right">
-            <div>
-              <p>
-                {user?.name} (you) {game?.isGameAdmin && <span className="ml-2">&#128081;</span>}
-              </p>
+          <div className="flex items-center space-x-4 bg-b-3 bottom-0 w-full h-20 rounded-b-2xl px-7">
+            <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
+              #{player?.rank}
             </div>
-            <div>
-              <div className={cls(StyleUtils.getChangeStyle(player?.totalChangePercent || 0))}>
-                {StringUtils.signNumber((player?.totalChangePercent || 0) / 100, 'percent')}
+            <div className="flex flex-row justify-between items-center w-full">
+              <div>
+                <p>
+                  {user?.name} (you) {player?.rank === 1 && <span className="ml-2">&#128081;</span>}
+                </p>
+                {player?.isGameAdmin && <p className="text-t-2 text-sm">Game admin</p>}
               </div>
-              <p className="text-sm text-t-2">{StringUtils.USD(player?.totalValue as number)}</p>
+              <div>
+                <div className={cls(StyleUtils.getChangeStyle(player?.totalChangePercent || 0))}>
+                  {StringUtils.signNumber((player?.totalChangePercent || 0) / 100, 'percent')}
+                </div>
+                <p className="text-sm text-t-2">{StringUtils.USD(player?.totalValue as number)}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
+  };
+
+  const removePlayer = async () => {
+    await GameService.removePlayer(game?.id as string, player?.playerId as string);
+    Analytics.track(GameEvents.KICK_PLAYER, {
+      gameId: game?.id,
+      inviteCode: game?.inviteCode,
+      playerId: player?.playerId,
+    });
+    navigate(`/dashboard/g/${game?.inviteCode}/leaderboard`);
   };
 
   if (isPlayerPortfolio && !player) {
@@ -404,17 +423,42 @@ export default function Portfolio() {
   return (
     <div>
       {isPlayerPortfolio ? (
-        <div className="flex space-x-4 items-center">
-          <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
-            #{player?.rank}
+        <div className="flex flex-wrap justify-between items-center">
+          {isMobile && (
+            <Link to="#" onClick={() => navigate(-1)}>
+              <Icon28ChevronLeftOutline className="text-t-1 mb-4 md:hidden" />
+            </Link>
+          )}
+          <div className="flex flex-wrap space-y-2 space-x-1 md:space-y-0 md:space-x-4 items-center">
+            <Button
+              type={ButtonType.IconButton}
+              onClick={() => navigate(-1)}
+              className="-ml-16 bg-b-3 w-12 h-12 hidden md:flex"
+            >
+              <Icon28ArrowLeftOutline />
+            </Button>
+            <div className="flex justify-center items-center rounded-full w-11 h-11 bg-b-1">
+              #{player?.rank}
+            </div>
+            <div>
+              <h5 className="font-semibold">
+                {player?.name}'s portfolio{' '}
+                {player?.rank === 1 && <span className="ml-2">&#128081;</span>}
+              </h5>
+              <p className="text-t-2">
+                {player?.isGameAdmin ? 'Game admin · ' : ''}Joined on{' '}
+                {dayjs(player?.createdAt).format('MMM D, YYYY')}
+              </p>
+            </div>
           </div>
-          <div>
-            <h5 className="font-semibold">
-              {player?.name}'s portfolio{' '}
-              {player?.isGameAdmin && <span className="ml-2">&#128081;</span>}
-            </h5>
-            <p className="text-t-2">Joined on {dayjs(player?.createdAt).format('MMM D, YYYY')}</p>
-          </div>
+          <Button
+            shadow
+            type={ButtonType.Secondary}
+            className="min-h-[32px] h-auto text-u-negative"
+            onClick={removePlayer}
+          >
+            Kick player
+          </Button>
         </div>
       ) : (
         <p className="text-t-2">Your portfolio</p>
@@ -424,16 +468,18 @@ export default function Portfolio() {
         isPlayerPortfolio={!!isPlayerPortfolio}
         player={player as Player}
       />
-      <StatsBar stats={statsBars} />
+      <StatsBar stats={statsBars} className="mt-4" />
       {!isPlayerPortfolio && game?.status === GameStatus.ACTIVE && positions.length >= 1 && (
-        <Button
-          shadow
-          type={ButtonType.Primary}
-          className="w-full h-14 my-4"
-          onClick={() => navigate(`/dashboard/g/${game?.inviteCode}/browse`)}
-        >
-          Buy a stock
-        </Button>
+        <div className="-ml-4 px-4 py-4 w-full fixed bottom-20 md:static md:-ml-0 md:px-0 z-40">
+          <Button
+            shadow
+            type={ButtonType.Primary}
+            className="w-full h-14"
+            onClick={() => navigate(`/dashboard/g/${game?.inviteCode}/browse`)}
+          >
+            Buy a stock
+          </Button>
+        </div>
       )}
       {game?.status === GameStatus.FINISHED && (
         <>

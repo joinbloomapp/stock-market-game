@@ -165,14 +165,16 @@ export default function Graph({
         <h2 className="font-semibold">{StringUtils.USD(activePoint?.y as number)}</h2>
         <div className="flex justify-between mt-4 pr-2">
           {getFormattedChange()}
-          <PeriodTabs periods={periods} activePeriod={activePeriod} onChange={onChangePeriod} />
+          <div className="hidden md:block">
+            <PeriodTabs periods={periods} activePeriod={activePeriod} onChange={onChangePeriod} />
+          </div>
         </div>
       </div>
       <div className="h-[228px] w-full bg-b-3 light-pink-gradient mt-12 mb-4">
         {!loading && !graphDataError ? (
-          <ResponsiveContainer width="100%" height={totalHeight}>
+          <ResponsiveContainer width={`${(width / totalWidth) * 100}%`} height={totalHeight}>
             <LineChart
-              width={`${(width / totalWidth) * 100}%`}
+              width="100%"
               height={totalHeight}
               data={points}
               margin={{
@@ -210,6 +212,9 @@ export default function Graph({
             {graphDataError ? emptyState || graphDataError : <Loader className="mx-auto" />}
           </div>
         )}
+      </div>
+      <div className="md:hidden mt-4">
+        <PeriodTabs periods={periods} activePeriod={activePeriod} onChange={onChangePeriod} />
       </div>
     </div>
   );

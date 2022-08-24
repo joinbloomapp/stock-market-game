@@ -43,7 +43,7 @@ export default function RadioListGroup({
               >
                 {({ active, checked }) => (
                   <>
-                    <div tabIndex={0} className="flex w-full items-center justify-between text-t-1">
+                    <div tabIndex={0} className="flex w-full justify-between items-center text-t-1">
                       <div className="flex items-center">
                         <div className="text-sm">
                           <RadioGroup.Label
@@ -60,11 +60,11 @@ export default function RadioListGroup({
                         </div>
                       </div>
                       {checked ? (
-                        <div className="rounded-full w-6 h-6 bg-a-1 flex justify-center items-center">
-                          <Icon16CheckOutline className="w-8 h-8" />
+                        <div className="rounded-full bg-a-1 flex justify-center items-center flex-shrink-0">
+                          <Icon16CheckOutline width={20} height={20} />
                         </div>
                       ) : (
-                        <div className="rounded-full w-6 h-6 bg-transparent border-2 border-i-1 flex justify-center items-center"></div>
+                        <div className="rounded-full w-5 h-5 bg-transparent border-2 border-i-1 flex justify-center items-center flex-shrink-0"></div>
                       )}
                     </div>
                   </>

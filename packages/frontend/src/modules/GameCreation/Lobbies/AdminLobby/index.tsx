@@ -21,7 +21,7 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
 
   const renderPlayersCard = () => {
     return (
-      <div className="bg-b-2 w-full overflow-y-scroll rounded-xl px-8 pt-8 pb-16 min-h-[280px]">
+      <div className="bg-b-2 w-full overflow-y-scroll rounded-xl px-8 pt-8 pb-16 min-h-[280px] max-h-[350px]">
         {players.length > 0 ? (
           <div className="flex flex-col">
             <p>{players.length} players</p>
@@ -33,7 +33,7 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
                 >
                   <p className="font-medium">
                     {p.name}
-                    {p.isGameAdmin && <span className="ml-2">&#128081;</span>}
+                    {p.isGameAdmin ? ' (Admin)' : ''}
                   </p>
                   {!p.isGameAdmin && (
                     <Button
@@ -60,12 +60,12 @@ export default function AdminLobby({ game, players = [], removePlayer }: IAdminL
   };
 
   return (
-    <div className="flex flex-col space-y-4 md:flex-row md:space-x-7 md:space-y-0 w-full h-[680px]">
-      <div className="flex flex-col space-y-4 w-full">
+    <div className="flex md:flex-row flex-col md:space-x-4 w-11/12">
+      <div className="flex flex-col space-y-2 w-full">
         <InvitePlayersCard inviteCode={inviteCode as string} />
         {renderPlayersCard()}
       </div>
-      <div className="w-full">
+      <div className="w-full mt-4 md:mt-0">
         <GameEditInfoCard game={game} players={players} />
       </div>
     </div>

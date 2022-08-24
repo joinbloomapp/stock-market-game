@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import cls from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../App';
@@ -88,7 +89,10 @@ export default function Header() {
         width="170"
         height="48"
         src={Logo}
-        className="absolute left-4 md:left-0 right-0 md:mr-auto md:ml-auto"
+        className={cls('absolute', {
+          'left-4 md:left-0 right-0 md:mr-auto md:ml-auto': !(signup || login),
+          'left-0 right-0 mr-auto ml-auto': signup || login,
+        })}
       />
       <div className="absolute right-4">{renderBtn()}</div>
     </div>

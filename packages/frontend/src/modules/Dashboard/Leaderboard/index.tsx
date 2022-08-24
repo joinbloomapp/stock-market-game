@@ -58,7 +58,10 @@ export default function Leaderboard() {
 
   return (
     <div>
-      <div className="relative" ref={leaderboardRef as LegacyRef<HTMLDivElement> | undefined}>
+      <div
+        className="relative hidden md:block"
+        ref={leaderboardRef as LegacyRef<HTMLDivElement> | undefined}
+      >
         {game?.status !== GameStatus.NOT_STARTED &&
           players.slice(0, 3).map((p, i) => {
             return (
@@ -96,7 +99,7 @@ export default function Leaderboard() {
           className="mx-auto"
         />
       </div>
-      <LeaderboardTable players={players} loading={loading} className="mt-0" />
+      <LeaderboardTable players={players} loading={loading} />
     </div>
   );
 }
