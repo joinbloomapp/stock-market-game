@@ -36,7 +36,7 @@ export default class Logger extends ConsoleLogger {
 
   constructor() {
     super();
-    this.logtail = new Logtail("fi3qqNBpPVjXuTUM2FZ8rShj");
+    this.logtail = new Logtail("PkPhCGcZ9oVLqQZHYWYMjbzT");
   }
 
   warn(message: any, stack?: string, context?: string) {
