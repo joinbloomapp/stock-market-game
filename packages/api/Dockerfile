@@ -9,7 +9,7 @@ ADD ./packages/api/ ./packages/api/
 ADD ./packages/postgresql/ ./packages/postgresql/
 
 RUN yarn install --production
-RUN yarn global add lerna
+RUN yarn global add lerna@^3.22.1
 RUN npx lerna bootstrap
 
 WORKDIR /server/packages/postgresql/
