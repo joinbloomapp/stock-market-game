@@ -211,9 +211,27 @@ jobs:
         run: yarn run build
 
       - name: Configure AWS credentials
+        if: "contains(matrix.deploymentEnv, 'prod')"
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::968542545167:role/smg-server-deploy-${{ matrix.deploymentEnv }}
+          aws-access-key-id: ${{ secrets.PROD_DEPLOY_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PROD_DEPLOY_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Configure AWS credentials
+        if: "contains(matrix.deploymentEnv, 'staging')"
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.STAGING_DEPLOY_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.STAGING_DEPLOY_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Configure AWS credentials
+        if: "contains(matrix.deploymentEnv, 'dev')"
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEV_DEPLOY_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEV_DEPLOY_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
       - name: Login to Amazon ECR
