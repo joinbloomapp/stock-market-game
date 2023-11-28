@@ -43,7 +43,7 @@ Copyright 2022 Contour Labs, Inc.
 The Bloom and Stock Market Game product documentation in
 assets, content, and data folders are licensed under a [CC-BY license](./LICENSE-CC-BY).
 
-All other code in this repository is
+All other code in this repository is 
 licensed under the AGPLv3: https://opensource.org/licenses/agpl-3.0
 This license file can also be found in [LICENSE](./LICENSE)
 in the root of the source tree.
